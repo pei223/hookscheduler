@@ -1,0 +1,6 @@
+version: '3'
+
+tasks:
+  run-app:
+    cmds:
+      - go run cmd/main.go
