@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 	"os/signal"
 	"syscall"
@@ -22,8 +23,16 @@ func Serve() {
 		syscall.SIGINT, syscall.SIGTERM,
 	)
 
+	// TODO: 後で環境変数にしておく
 	logger := common.NewLogger(ctx, "debug")
-	taskWebHdlr := task.NewTaskWebHandler(&logger)
+	db, err := sql.Open("postgres", "host=localhost port=9432 user=hookscheduler password=hookscheduler dbname=hookscheduler sslmode=disable")
+	if err != nil {
+		panic(err)
+	}
+
+	taskMod := task.NewTaskMod(task.NewTaskRepo(db))
+	taskWebHdlr := task.NewTaskWebHandler(&logger, taskMod)
+
 	router := web.NewRouter(
 		taskWebHdlr,
 	)

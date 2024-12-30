@@ -7,20 +7,24 @@ import (
 )
 
 type TaskWebHandler struct {
-	logger *zerolog.Logger
+	logger  *zerolog.Logger
+	taskMod TaskMod
 }
 
-func NewTaskWebHandler(logger *zerolog.Logger) *TaskWebHandler {
+func NewTaskWebHandler(logger *zerolog.Logger, taskMod TaskMod) *TaskWebHandler {
 	return &TaskWebHandler{
-		logger: logger,
+		logger:  logger,
+		taskMod: taskMod,
 	}
 }
 
 func (t *TaskWebHandler) GetTask(r *http.Request) (int, any, error) {
 	t.logger.Info().Msg("GetTask")
 	taskId := TaskIDFromContext(r.Context())
-	return 200, task{
-		TaskId: taskId.String(),
-		Status: taskStatusPending,
-	}, nil
+	task, err := t.taskMod.GetTask(r.Context(), taskId)
+	if err != nil {
+		t.logger.Error().Err(err).Msg("failed to get task")
+		return 500, nil, err
+	}
+	return 200, task, err
 }
