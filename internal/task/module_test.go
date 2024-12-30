@@ -1,4 +1,4 @@
-package task
+package task_test
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/pei223/hook-scheduler/internal/models"
+	"github.com/pei223/hook-scheduler/internal/task"
 	"github.com/pei223/hook-scheduler/internal/task/mock_task"
 	"github.com/stretchr/testify/suite"
 )
@@ -15,13 +16,13 @@ type taskModTestSuite struct {
 	suite.Suite
 
 	repo *mock_task.MockTaskRepo
-	mod  TaskMod
+	mod  task.TaskMod
 }
 
 func (s *taskModTestSuite) SetupSuite() {
 	gomock := gomock.NewController(s.T())
 	s.repo = mock_task.NewMockTaskRepo(gomock)
-	s.mod = NewTaskMod(s.repo)
+	s.mod = task.NewTaskMod(s.repo)
 }
 
 func TestTaskModSuite(t *testing.T) {

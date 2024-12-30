@@ -1,4 +1,4 @@
-package task
+package task_test
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	_ "github.com/lib/pq"
 	"github.com/pei223/hook-scheduler/internal/models"
+	"github.com/pei223/hook-scheduler/internal/task"
 	"github.com/pei223/hook-scheduler/internal/test_common"
 	"github.com/pei223/hook-scheduler/pkg/db"
 	"github.com/samber/lo"
@@ -18,13 +19,13 @@ import (
 type taskRepoTestSuite struct {
 	suite.Suite
 	db   *sql.DB
-	repo TaskRepo
+	repo task.TaskRepo
 }
 
 func (s *taskRepoTestSuite) SetupSuite() {
 	db := lo.Must(sql.Open("postgres", test_common.TestDatabaseConnectionString))
 	s.db = db
-	s.repo = NewTaskRepo(db)
+	s.repo = task.NewTaskRepo(db)
 }
 
 func (s *taskRepoTestSuite) SetupTest() {

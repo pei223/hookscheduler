@@ -11,6 +11,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	uuid "github.com/google/uuid"
 	models "github.com/pei223/hook-scheduler/internal/models"
+	task "github.com/pei223/hook-scheduler/internal/task"
 )
 
 // MockTaskRepo is a mock of TaskRepo interface.
@@ -34,6 +35,21 @@ func NewMockTaskRepo(ctrl *gomock.Controller) *MockTaskRepo {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockTaskRepo) EXPECT() *MockTaskRepoMockRecorder {
 	return m.recorder
+}
+
+// CreateTask mocks base method.
+func (m *MockTaskRepo) CreateTask(arg0 context.Context, arg1 *task.TaskCreateParams) (*models.Task, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTask", arg0, arg1)
+	ret0, _ := ret[0].(*models.Task)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTask indicates an expected call of CreateTask.
+func (mr *MockTaskRepoMockRecorder) CreateTask(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTask", reflect.TypeOf((*MockTaskRepo)(nil).CreateTask), arg0, arg1)
 }
 
 // GetTask mocks base method.

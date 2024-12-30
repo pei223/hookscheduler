@@ -9,6 +9,7 @@ import (
 
 type TaskMod interface {
 	GetTask(ctx context.Context, taskId uuid.UUID) (*models.Task, error)
+	CreateTask(ctx context.Context, params *TaskCreateParams) (*models.Task, error)
 }
 
 type taskMod struct {
@@ -23,4 +24,8 @@ func NewTaskMod(taskRepo TaskRepo) TaskMod {
 
 func (t *taskMod) GetTask(ctx context.Context, taskId uuid.UUID) (*models.Task, error) {
 	return t.taskRepo.GetTask(ctx, taskId)
+}
+
+func (t *taskMod) CreateTask(ctx context.Context, params *TaskCreateParams) (*models.Task, error) {
+	return t.taskRepo.CreateTask(ctx, params)
 }
