@@ -1,0 +1,22 @@
+output = "internal/models"
+wipe = true
+no-tests = true
+no-auto-timestamps = true
+
+[psql]
+dbname = "hookscheduler"
+host = "localhost"
+port = 9432
+user = "hookscheduler"
+pass = "hookscheduler"
+sslmode = "disable"
+blacklist = []
+
+[[types]]
+[types.match]
+db_type = "uuid"
+nullable = false
+[types.replace]
+type = "uuid.UUID"
+[types.imports]
+third_party = ['"github.com/google/uuid"']
