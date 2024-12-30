@@ -1,8 +1,7 @@
 package task
 
 import (
-	"net/http"
-
+	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 )
 
@@ -18,10 +17,11 @@ func NewTaskWebHandler(logger *zerolog.Logger, taskMod TaskMod) *TaskWebHandler 
 	}
 }
 
-func (t *TaskWebHandler) GetTask(r *http.Request) (int, any, error) {
+func (t *TaskWebHandler) GetTask(c *gin.Context) (int, any, error) {
 	t.logger.Info().Msg("GetTask")
-	taskId := TaskIDFromContext(r.Context())
-	task, err := t.taskMod.GetTask(r.Context(), taskId)
+	ctx := c.Request.Context()
+	taskId := TaskIDFromContext(ctx)
+	task, err := t.taskMod.GetTask(ctx, taskId)
 	if err != nil {
 		t.logger.Error().Err(err).Msg("failed to get task")
 		return 500, nil, err

@@ -36,8 +36,9 @@ func Serve() {
 	router := web.NewRouter(
 		taskWebHdlr,
 	)
+
 	server := &http.Server{
-		Addr:    ":80", // TODO 環境変数
+		Addr:    "0.0.0.0:80", // TODO 環境変数
 		Handler: router,
 	}
 
