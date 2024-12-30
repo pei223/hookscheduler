@@ -7,9 +7,10 @@ tasks:
   run-app:
     cmds:
       - go run cmd/main.go
+
   generate:
     cmds:
-      - go generate ./...
+      - PATH="{{.GOBIN}}:$PATH" && go generate ./...
 
   test-down:
     cmds:
@@ -51,3 +52,7 @@ tasks:
         {{.GOBIN}}/staticcheck ./...
         {{.GOBIN}}/golangci-lint run ./...
 
+
+  test:
+    cmds:
+      - go test -v ./... 
