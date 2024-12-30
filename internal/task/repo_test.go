@@ -10,7 +10,9 @@ import (
 	"github.com/pei223/hook-scheduler/internal/models"
 	"github.com/pei223/hook-scheduler/internal/task"
 	"github.com/pei223/hook-scheduler/internal/test_common"
+	"github.com/pei223/hook-scheduler/pkg/common"
 	"github.com/pei223/hook-scheduler/pkg/db"
+	"github.com/rs/zerolog"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/suite"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -18,19 +20,22 @@ import (
 
 type taskRepoTestSuite struct {
 	suite.Suite
-	db   *sql.DB
-	repo task.TaskRepo
+	db     *sql.DB
+	repo   task.TaskRepo
+	logger zerolog.Logger
 }
 
 func (s *taskRepoTestSuite) SetupSuite() {
 	db := lo.Must(sql.Open("postgres", test_common.TestDatabaseConnectionString))
+	s.logger = common.NewLogger(context.Background(), "debug")
 	s.db = db
-	s.repo = task.NewTaskRepo(db)
+	s.repo = task.NewTaskRepo(db, &s.logger)
 }
 
 func (s *taskRepoTestSuite) SetupTest() {
 	ctx := context.TODO()
-	err := db.ExecTx(ctx, s.db, func(ctx context.Context, tx *sql.Tx) error {
+	logger := common.NewLogger(context.Background(), "debug")
+	err := db.ExecTx(ctx, &logger, s.db, func(ctx context.Context, tx *sql.Tx) error {
 		_, err := models.Tasks().DeleteAll(ctx, s.db)
 		return err
 	})
@@ -51,7 +56,7 @@ func (s *taskRepoTestSuite) TestGetTask() {
 	ctx := context.TODO()
 
 	taskID := uuid.MustParse("12345678-1234-5678-1234-567812345678")
-	err := db.ExecTx(ctx, s.db, func(ctx context.Context, tx *sql.Tx) error {
+	err := db.ExecTx(ctx, &s.logger, s.db, func(ctx context.Context, tx *sql.Tx) error {
 		task := models.Task{
 			TaskID:   taskID,
 			TaskName: "test",

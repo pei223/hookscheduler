@@ -43,7 +43,7 @@ func Serve() {
 		panic(err)
 	}
 
-	taskMod := task.NewTaskMod(task.NewTaskRepo(db))
+	taskMod := task.NewTaskMod(task.NewTaskRepo(db, &logger))
 	taskWebHdlr := task.NewTaskWebHandler(&logger, taskMod)
 
 	router := web.NewRouter(

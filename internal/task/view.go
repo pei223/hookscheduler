@@ -9,14 +9,14 @@ const (
 	taskStatusRunning taskStatus = "running"
 )
 
-type task struct {
+type Task struct {
 	TaskId string     `json:"task_id"`
 	Name   string     `json:"name"`
 	Status taskStatus `json:"status"`
 }
 
-func fromModel(model *models.Task) task {
-	return task{
+func fromModel(model *models.Task) Task {
+	return Task{
 		TaskId: model.TaskID.String(),
 		Name:   model.TaskName,
 		Status: taskStatusPending,

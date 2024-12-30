@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/pei223/hook-scheduler/internal/models"
 	"github.com/pei223/hook-scheduler/pkg/db"
+	"github.com/rs/zerolog"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
@@ -16,12 +17,14 @@ type TaskRepo interface {
 }
 
 type taskRepo struct {
-	db *sql.DB
+	db     *sql.DB
+	logger *zerolog.Logger
 }
 
-func NewTaskRepo(db *sql.DB) TaskRepo {
+func NewTaskRepo(db *sql.DB, logger *zerolog.Logger) TaskRepo {
 	return &taskRepo{
-		db: db,
+		db:     db,
+		logger: logger,
 	}
 }
 
@@ -31,7 +34,7 @@ func (t *taskRepo) GetTask(ctx context.Context, taskId uuid.UUID) (*models.Task,
 
 func (t *taskRepo) CreateTask(ctx context.Context, params *TaskCreateParams) (*models.Task, error) {
 	var task models.Task
-	err := db.ExecTx(ctx, t.db, func(ctx context.Context, tx *sql.Tx) error {
+	err := db.ExecTx(ctx, t.logger, t.db, func(ctx context.Context, tx *sql.Tx) error {
 		taskID := uuid.New()
 		task = models.Task{
 			TaskID:   taskID,
