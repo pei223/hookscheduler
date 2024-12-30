@@ -1,6 +1,53 @@
 version: '3'
 
+env: 
+  GOBIN: $(pwd)/bin
+
 tasks:
   run-app:
     cmds:
       - go run cmd/main.go
+  generate:
+    cmds:
+      - go generate ./...
+
+  test-down:
+    cmds:
+      - docker kill hookscheduler-database
+  
+  test-up:
+    env:
+      TEST_DATABASE_PORT: 9432
+      TEST_DATABASE_PASSWORD: hookscheduler
+      TEST_DATABASE_USER: hookscheduler
+      TEST_DATABASE_DB: hookscheduler
+    cmds:
+      - | 
+        docker run --rm -d \
+          -p $TEST_DATABASE_PORT:5432 \
+          --name hookscheduler-database \
+          -e POSTGRES_PASSWORD=$TEST_DATABASE_PASSWORD \
+          -e POSTGRES_USER=$TEST_DATABASE_USER \
+          -e POSTGRES_DB=$TEST_DATABASE_DB \
+          -v ./initdb.d:/docker-entrypoint-initdb.d \
+          postgres:16.6-alpine
+  
+  install-devtools:
+    cmds:
+      - GOBIN="{{.GOBIN}}" go generate ./tools.go
+
+  gen-schema:
+    cmds:
+      - PATH="{{.GOBIN}}:$$PATH" && sqlboiler psql
+  
+  fmt:
+    cmds:
+      - gofmt -s -w .
+
+  lint:
+    cmds:
+      - |
+        {{.GOBIN}}/goimports -w -l .
+        {{.GOBIN}}/staticcheck ./...
+        {{.GOBIN}}/golangci-lint run ./...
+
