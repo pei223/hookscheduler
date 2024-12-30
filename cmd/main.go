@@ -3,15 +3,23 @@ package main
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"net/http"
 	"os/signal"
 	"syscall"
 
+	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 	"github.com/pei223/hook-scheduler/internal/task"
 	"github.com/pei223/hook-scheduler/internal/web"
 	"github.com/pei223/hook-scheduler/pkg/common"
 )
+
+type Config struct {
+	ApiServerPort            string `envconfig:"API_SERVER_PORT" default:"80"`
+	DatabaseConnectionString string `envconfig:"DATABASE_CONNECTION_STRING" default:""`
+	LogLevel                 string `envconfig:"LOG_LEVEL" default:"info"`
+}
 
 func main() {
 	Serve()
@@ -23,9 +31,14 @@ func Serve() {
 		syscall.SIGINT, syscall.SIGTERM,
 	)
 
-	// TODO: 後で環境変数にしておく
-	logger := common.NewLogger(ctx, "debug")
-	db, err := sql.Open("postgres", "host=localhost port=9432 user=hookscheduler password=hookscheduler dbname=hookscheduler sslmode=disable")
+	var cfg Config
+	err := envconfig.Process("", &cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	logger := common.NewLogger(ctx, cfg.LogLevel)
+	db, err := sql.Open("postgres", cfg.DatabaseConnectionString)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +51,7 @@ func Serve() {
 	)
 
 	server := &http.Server{
-		Addr:    "0.0.0.0:80", // TODO 環境変数
+		Addr:    fmt.Sprintf(":%s", cfg.ApiServerPort),
 		Handler: router,
 	}
 
