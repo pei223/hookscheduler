@@ -4,17 +4,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/pei223/hook-scheduler/internal/task"
+	"github.com/pei223/hook-scheduler/pkg/web"
+	"github.com/pkg/errors"
 )
 
 func TaskIDContext(c *gin.Context) {
 	s := c.Param("taskID")
 	if s == "" {
-		// c.JSON(http.StatusBadRequest, gin.H{"error": "taskId is empty"})
+		web.HandleError(c, errors.New("taskId is empty"))
 		return
 	}
 	taskID, err := uuid.Parse(s)
 	if err != nil {
-		// c.JSON(http.StatusBadRequest, gin.H{"error": "taskId is not UUID"})
+		web.HandleError(c, errors.New("taskId is empty"))
 		return
 	}
 	ctx := c.Request.Context()

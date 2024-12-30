@@ -24,7 +24,7 @@ func (t *TaskWebHandler) GetTask(c *gin.Context) (int, any, error) {
 	task, err := t.taskMod.GetTask(ctx, taskId)
 	if err != nil {
 		t.logger.Error().Err(err).Msg("failed to get task")
-		return 500, nil, err
+		return 0, nil, err
 	}
-	return 200, task, err
+	return 200, fromModel(task), nil
 }

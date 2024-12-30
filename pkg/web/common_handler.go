@@ -10,12 +10,14 @@ func ToHandlerFunc(f WebHandlerFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		status, data, err := f(c)
 		if err != nil {
-			// TODO
-			// exception handler的なやつをやりたい
-			// エラーレスポンス型ならそのままそれを返す
-			c.JSON(status, err.Error())
+			HandleError(c, err)
 			return
 		}
 		c.JSON(status, data)
 	}
+}
+
+func HandleError(c *gin.Context, err error) {
+	status, res := ErrorResFrom(c, err)
+	c.JSON(status, res)
 }
