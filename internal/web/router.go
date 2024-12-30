@@ -9,7 +9,7 @@ import (
 func NewRouter(
 	taskHandler *task.TaskWebHandler,
 ) *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
 
 	v1 := router.Group("/api/v1")
 	{
@@ -21,6 +21,7 @@ func NewRouter(
 				taskRoute.GET("", web.ToHandlerFunc(taskHandler.GetTask))
 			}
 		}
+		tasksRoute.POST("", web.ToHandlerFunc(taskHandler.CreateTask))
 	}
 
 	return router
