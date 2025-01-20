@@ -4,7 +4,11 @@
 package models
 
 var TableNames = struct {
-	Tasks string
+	HookHistories string
+	HookSchedules string
+	Hooks         string
 }{
-	Tasks: "tasks",
+	HookHistories: "hook_histories",
+	HookSchedules: "hook_schedules",
+	Hooks:         "hooks",
 }
