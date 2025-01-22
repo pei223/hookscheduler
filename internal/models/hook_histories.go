@@ -15,6 +15,7 @@ import (
 
 	"github.com/friendsofgo/errors"
 	"github.com/google/uuid"
+	"github.com/pei223/hook-scheduler/pkg/types"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
@@ -25,15 +26,15 @@ import (
 
 // HookHistory is an object representing the database table.
 type HookHistory struct {
-	HookHistoryID    uuid.UUID `boil:"hook_history_id" json:"hook_history_id" toml:"hook_history_id" yaml:"hook_history_id"`
-	HookID           uuid.UUID `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
-	HookScheduleID   uuid.UUID `boil:"hook_schedule_id" json:"hook_schedule_id" toml:"hook_schedule_id" yaml:"hook_schedule_id"`
-	Status           int16     `boil:"status" json:"status" toml:"status" yaml:"status"`
-	StartedAt        time.Time `boil:"started_at" json:"started_at" toml:"started_at" yaml:"started_at"`
-	UpdatedAt        time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	EndedAt          null.Time `boil:"ended_at" json:"ended_at,omitempty" toml:"ended_at" yaml:"ended_at,omitempty"`
-	HookSnapshot     null.JSON `boil:"hook_snapshot" json:"hook_snapshot,omitempty" toml:"hook_snapshot" yaml:"hook_snapshot,omitempty"`
-	ScheduleSnapshot null.JSON `boil:"schedule_snapshot" json:"schedule_snapshot,omitempty" toml:"schedule_snapshot" yaml:"schedule_snapshot,omitempty"`
+	HookHistoryID    uuid.UUID   `boil:"hook_history_id" json:"hook_history_id" toml:"hook_history_id" yaml:"hook_history_id"`
+	HookID           uuid.UUID   `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
+	HookScheduleID   uuid.UUID   `boil:"hook_schedule_id" json:"hook_schedule_id" toml:"hook_schedule_id" yaml:"hook_schedule_id"`
+	Status           int16       `boil:"status" json:"status" toml:"status" yaml:"status"`
+	StartedAt        time.Time   `boil:"started_at" json:"started_at" toml:"started_at" yaml:"started_at"`
+	UpdatedAt        time.Time   `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	EndedAt          null.Time   `boil:"ended_at" json:"ended_at,omitempty" toml:"ended_at" yaml:"ended_at,omitempty"`
+	HookSnapshot     types.JSONB `boil:"hook_snapshot" json:"hook_snapshot,omitempty" toml:"hook_snapshot" yaml:"hook_snapshot,omitempty"`
+	ScheduleSnapshot types.JSONB `boil:"schedule_snapshot" json:"schedule_snapshot,omitempty" toml:"schedule_snapshot" yaml:"schedule_snapshot,omitempty"`
 
 	R *hookHistoryR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L hookHistoryL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -174,29 +175,29 @@ func (w whereHelpernull_Time) GTE(x null.Time) qm.QueryMod {
 func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
-type whereHelpernull_JSON struct{ field string }
+type whereHelpertypes_JSONB struct{ field string }
 
-func (w whereHelpernull_JSON) EQ(x null.JSON) qm.QueryMod {
+func (w whereHelpertypes_JSONB) EQ(x types.JSONB) qm.QueryMod {
 	return qmhelper.WhereNullEQ(w.field, false, x)
 }
-func (w whereHelpernull_JSON) NEQ(x null.JSON) qm.QueryMod {
+func (w whereHelpertypes_JSONB) NEQ(x types.JSONB) qm.QueryMod {
 	return qmhelper.WhereNullEQ(w.field, true, x)
 }
-func (w whereHelpernull_JSON) LT(x null.JSON) qm.QueryMod {
+func (w whereHelpertypes_JSONB) LT(x types.JSONB) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.LT, x)
 }
-func (w whereHelpernull_JSON) LTE(x null.JSON) qm.QueryMod {
+func (w whereHelpertypes_JSONB) LTE(x types.JSONB) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.LTE, x)
 }
-func (w whereHelpernull_JSON) GT(x null.JSON) qm.QueryMod {
+func (w whereHelpertypes_JSONB) GT(x types.JSONB) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GT, x)
 }
-func (w whereHelpernull_JSON) GTE(x null.JSON) qm.QueryMod {
+func (w whereHelpertypes_JSONB) GTE(x types.JSONB) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GTE, x)
 }
 
-func (w whereHelpernull_JSON) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_JSON) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+func (w whereHelpertypes_JSONB) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpertypes_JSONB) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 var HookHistoryWhere = struct {
 	HookHistoryID    whereHelperuuid_UUID
@@ -206,8 +207,8 @@ var HookHistoryWhere = struct {
 	StartedAt        whereHelpertime_Time
 	UpdatedAt        whereHelpertime_Time
 	EndedAt          whereHelpernull_Time
-	HookSnapshot     whereHelpernull_JSON
-	ScheduleSnapshot whereHelpernull_JSON
+	HookSnapshot     whereHelpertypes_JSONB
+	ScheduleSnapshot whereHelpertypes_JSONB
 }{
 	HookHistoryID:    whereHelperuuid_UUID{field: "\"hook_histories\".\"hook_history_id\""},
 	HookID:           whereHelperuuid_UUID{field: "\"hook_histories\".\"hook_id\""},
@@ -216,8 +217,8 @@ var HookHistoryWhere = struct {
 	StartedAt:        whereHelpertime_Time{field: "\"hook_histories\".\"started_at\""},
 	UpdatedAt:        whereHelpertime_Time{field: "\"hook_histories\".\"updated_at\""},
 	EndedAt:          whereHelpernull_Time{field: "\"hook_histories\".\"ended_at\""},
-	HookSnapshot:     whereHelpernull_JSON{field: "\"hook_histories\".\"hook_snapshot\""},
-	ScheduleSnapshot: whereHelpernull_JSON{field: "\"hook_histories\".\"schedule_snapshot\""},
+	HookSnapshot:     whereHelpertypes_JSONB{field: "\"hook_histories\".\"hook_snapshot\""},
+	ScheduleSnapshot: whereHelpertypes_JSONB{field: "\"hook_histories\".\"schedule_snapshot\""},
 }
 
 // HookHistoryRels is where relationship names are stored.

@@ -15,7 +15,7 @@ import (
 
 	"github.com/friendsofgo/errors"
 	"github.com/google/uuid"
-	"github.com/volatiletech/null/v8"
+	"github.com/pei223/hook-scheduler/pkg/types"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -25,13 +25,13 @@ import (
 
 // Hook is an object representing the database table.
 type Hook struct {
-	HookID      uuid.UUID `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
-	DisplayName string    `boil:"display_name" json:"display_name" toml:"display_name" yaml:"display_name"`
-	Description string    `boil:"description" json:"description" toml:"description" yaml:"description"`
-	URL         string    `boil:"url" json:"url" toml:"url" yaml:"url"`
-	Method      string    `boil:"method" json:"method" toml:"method" yaml:"method"`
-	Body        null.JSON `boil:"body" json:"body,omitempty" toml:"body" yaml:"body,omitempty"`
-	Headers     null.JSON `boil:"headers" json:"headers,omitempty" toml:"headers" yaml:"headers,omitempty"`
+	HookID      uuid.UUID   `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
+	DisplayName string      `boil:"display_name" json:"display_name" toml:"display_name" yaml:"display_name"`
+	Description string      `boil:"description" json:"description" toml:"description" yaml:"description"`
+	URL         string      `boil:"url" json:"url" toml:"url" yaml:"url"`
+	Method      string      `boil:"method" json:"method" toml:"method" yaml:"method"`
+	Body        types.JSONB `boil:"body" json:"body,omitempty" toml:"body" yaml:"body,omitempty"`
+	Headers     types.JSONB `boil:"headers" json:"headers,omitempty" toml:"headers" yaml:"headers,omitempty"`
 
 	R *hookR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L hookL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -81,16 +81,16 @@ var HookWhere = struct {
 	Description whereHelperstring
 	URL         whereHelperstring
 	Method      whereHelperstring
-	Body        whereHelpernull_JSON
-	Headers     whereHelpernull_JSON
+	Body        whereHelpertypes_JSONB
+	Headers     whereHelpertypes_JSONB
 }{
 	HookID:      whereHelperuuid_UUID{field: "\"hooks\".\"hook_id\""},
 	DisplayName: whereHelperstring{field: "\"hooks\".\"display_name\""},
 	Description: whereHelperstring{field: "\"hooks\".\"description\""},
 	URL:         whereHelperstring{field: "\"hooks\".\"url\""},
 	Method:      whereHelperstring{field: "\"hooks\".\"method\""},
-	Body:        whereHelpernull_JSON{field: "\"hooks\".\"body\""},
-	Headers:     whereHelpernull_JSON{field: "\"hooks\".\"headers\""},
+	Body:        whereHelpertypes_JSONB{field: "\"hooks\".\"body\""},
+	Headers:     whereHelpertypes_JSONB{field: "\"hooks\".\"headers\""},
 }
 
 // HookRels is where relationship names are stored.

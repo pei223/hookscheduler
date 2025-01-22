@@ -20,3 +20,21 @@ nullable = false
 type = "uuid.UUID"
 [types.imports]
 third_party = ['"github.com/google/uuid"']
+
+[[types]]
+[types.match]
+db_type = "jsonb"
+nullable = true
+[types.replace]
+type = "types.JSONB"
+[types.imports]
+third_party = ['"github.com/pei223/hook-scheduler/pkg/types"']
+
+[[types]]
+[types.match]
+db_type = "jsonb"
+nullable = false
+[types.replace]
+type = "types.JSONB"
+[types.imports]
+third_party = ['"github.com/pei223/hook-scheduler/pkg/types"']
