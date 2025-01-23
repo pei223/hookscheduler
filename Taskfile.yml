@@ -56,3 +56,7 @@ tasks:
   test:
     cmds:
       - go test -v ./... 
+
+  test-update:
+    cmds:
+      - UPDATE_SNAPS=true go test -v ./... 
