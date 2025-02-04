@@ -1,0 +1,72 @@
+
+[TestHookModSuite/TestCreateHooks/success - 1]
+{
+ "body": {
+  "createtestkey": "createvalue",
+  "testlist": [
+   "test1",
+   "test2"
+  ]
+ },
+ "description": "",
+ "displayName": "test",
+ "header": {
+  "createtestkey": "createvalue",
+  "testlist": [
+   "test1",
+   "test2"
+  ]
+ },
+ "hookId": "12345678-1234-5678-1234-567812345678",
+ "method": "POST",
+ "url": "http://test.com"
+}
+---
+
+[TestHookModSuite/TestCreateHooks/invalid_param - 1]
+{
+ "detail": "invalid params",
+ "instance": "/api/v1/hooks",
+ "invalidParams": [
+  {
+   "name": "DisplayName",
+   "reason": "DisplayName must be a maximum of 20 characters in length"
+  }
+ ],
+ "title": "invalid params",
+ "type": "err_params"
+}
+---
+
+[TestHookModSuite/TestGetHooks/success - 1]
+{
+ "body": {
+  "gettestkey": "getvalue",
+  "testlist": [
+   "test1",
+   "test2"
+  ]
+ },
+ "description": "",
+ "displayName": "test",
+ "header": {
+  "gettestkey": "getvalue",
+  "testlist": [
+   "test1",
+   "test2"
+  ]
+ },
+ "hookId": "12345678-1234-5678-1234-567812345678",
+ "method": "POST",
+ "url": "http://test.com"
+}
+---
+
+[TestHookModSuite/TestGetHooks/not_found - 1]
+{
+ "detail": "sql: no rows in result set",
+ "instance": "/api/v1/hooks/12345678-1234-5678-1234-567812345678",
+ "title": "no data",
+ "type": "err_no_data"
+}
+---

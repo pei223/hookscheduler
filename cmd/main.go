@@ -10,8 +10,9 @@ import (
 
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
-	"github.com/pei223/hook-scheduler/internal/task"
-	"github.com/pei223/hook-scheduler/internal/web"
+	"github.com/pei223/hook-scheduler/internal/domain/hook"
+	"github.com/pei223/hook-scheduler/internal/usecase"
+	"github.com/pei223/hook-scheduler/internal/webapi"
 	"github.com/pei223/hook-scheduler/pkg/common"
 )
 
@@ -43,11 +44,13 @@ func Serve() {
 		panic(err)
 	}
 
-	taskMod := task.NewTaskMod(task.NewTaskRepo(db, &logger))
-	taskWebHdlr := task.NewTaskWebHandler(&logger, taskMod)
+	hookSvc := hook.NewHookService(db, hook.NewHookRepo())
+	hookUsecase := usecase.NewHookUsecase(hookSvc)
+	hookRouter := webapi.NewHookRouter(hookUsecase)
 
-	router := web.NewRouter(
-		taskWebHdlr,
+	router := webapi.NewRouter(
+		hookRouter,
+		logger,
 	)
 
 	server := &http.Server{
