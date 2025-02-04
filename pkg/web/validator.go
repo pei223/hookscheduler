@@ -21,7 +21,10 @@ func init() {
 	// Set default
 	univarsalTranslator = *ut.New(en, en)
 	enTrans, _ := univarsalTranslator.GetTranslator("en")
-	en_translations.RegisterDefaultTranslations(v, enTrans)
+	err := en_translations.RegisterDefaultTranslations(v, enTrans)
+	if err != nil {
+		panic(err)
+	}
 
 	defaultTrans = enTrans
 	// TODO 日付とか
@@ -35,7 +38,8 @@ func ToInvalidParams(errs validator.ValidationErrors) *[]errorcommon.InvalidPara
 		msg := err.Translate(defaultTrans)
 		invalidParams = append(invalidParams, errorcommon.InvalidParam{
 			Reason: msg,
-			Name:   err.Field(),
+			// TODO フィールド名がパスカルケースになってるので変換
+			Name: err.Field(),
 		})
 	}
 	if len(invalidParams) == 0 {

@@ -52,8 +52,8 @@ func ErrorResFrom(c *gin.Context, err error) (int, ErrorResponse) {
 	}
 	return http.StatusInternalServerError, ErrorResponse{
 		Instance: c.Request.URL.Path,
-		Title:    commonErr.Error(),
+		Title:    err.Error(),
 		Type:     errorcommon.ErrOthers,
-		Detail:   commonErr.Error(),
+		Detail:   err.Error(),
 	}
 }
