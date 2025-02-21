@@ -22,10 +22,10 @@ type CommonError struct {
 	Err           error
 	Title         string
 	Type          ErrorType
-	InvalidParams *[]InvalidParam
+	InvalidParams []InvalidParam `json:"omitempty"`
 }
 
-func NewCommonError(err error, title string, errType ErrorType, invalidParams *[]InvalidParam) *CommonError {
+func NewCommonError(err error, title string, errType ErrorType, invalidParams []InvalidParam) *CommonError {
 	return &CommonError{
 		Err:           err,
 		Title:         title,
@@ -46,7 +46,7 @@ func NewParseError(err error) *CommonError {
 	}
 }
 
-func NewInvalidParamsError(invalidParams *[]InvalidParam) *CommonError {
+func NewInvalidParamsError(invalidParams []InvalidParam) *CommonError {
 	return &CommonError{
 		Err:           errors.New("invalid params"),
 		Title:         "invalid params",

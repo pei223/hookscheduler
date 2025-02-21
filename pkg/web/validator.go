@@ -33,7 +33,7 @@ func init() {
 	CommonValidator = *v
 }
 
-func ToInvalidParams(errs validator.ValidationErrors) *[]errorcommon.InvalidParam {
+func ToInvalidParams(errs validator.ValidationErrors) []errorcommon.InvalidParam {
 	invalidParams := []errorcommon.InvalidParam{}
 	for _, err := range errs {
 		msg := err.Translate(defaultTrans)
@@ -45,14 +45,14 @@ func ToInvalidParams(errs validator.ValidationErrors) *[]errorcommon.InvalidPara
 	if len(invalidParams) == 0 {
 		return nil
 	}
-	return &invalidParams
+	return invalidParams
 }
 
 type Validatable interface {
 	Validate() *[]errorcommon.InvalidParam
 }
 
-func SchemaValidate(v any) *[]errorcommon.InvalidParam {
+func SchemaValidate(v any) []errorcommon.InvalidParam {
 	errs := CommonValidator.Struct(v)
 	if errs != nil {
 		return ToInvalidParams(errs.(validator.ValidationErrors))

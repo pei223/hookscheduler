@@ -20,11 +20,11 @@ var errStatusMap = map[errorcommon.ErrorType]int{
 
 // RFC 7807
 type ErrorResponse struct {
-	Type          errorcommon.ErrorType       `json:"type,omitempty"`
-	Title         string                      `json:"title"`
-	Detail        string                      `json:"detail,omitempty"`
-	Instance      string                      `json:"instance,omitempty"`
-	InvalidParams *[]errorcommon.InvalidParam `json:"invalidParams,omitempty"` // フィールドごとのエラー
+	Type          errorcommon.ErrorType      `json:"type,omitempty"`
+	Title         string                     `json:"title"`
+	Detail        string                     `json:"detail,omitempty"`
+	Instance      string                     `json:"instance,omitempty"`
+	InvalidParams []errorcommon.InvalidParam `json:"invalidParams,omitempty"` // フィールドごとのエラー
 }
 
 func ErrorResFrom(c *gin.Context, err error) (int, ErrorResponse) {
