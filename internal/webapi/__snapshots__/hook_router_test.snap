@@ -23,22 +23,23 @@
 }
 ---
 
-[TestHookModSuite/TestCreateHooks/invalid_param - 1]
+[TestHookModSuite/TestCreateHooks/contains_invalid_params - 1]
 {
- "detail": "invalid params",
  "instance": "/api/v1/hooks",
- "invalidParams": [
-  {
-   "name": "DisplayName",
-   "reason": "DisplayName must be a maximum of 20 characters in length"
-  }
- ],
- "title": "invalid params",
+ "title": "failed to parse",
  "type": "err_params"
 }
 ---
 
-[TestHookModSuite/TestGetHooks/success - 1]
+[TestHookModSuite/TestDeleteHook/not_found - 1]
+{
+ "instance": "/api/v1/hooks/12345678-1234-5678-1234-567812345678",
+ "title": "no data",
+ "type": "err_no_data"
+}
+---
+
+[TestHookModSuite/TestGetHook/success - 1]
 {
  "body": {
   "gettestkey": "getvalue",
@@ -62,11 +63,24 @@
 }
 ---
 
-[TestHookModSuite/TestGetHooks/not_found - 1]
+[TestHookModSuite/TestGetHook/not_found - 1]
 {
- "detail": "sql: no rows in result set",
  "instance": "/api/v1/hooks/12345678-1234-5678-1234-567812345678",
  "title": "no data",
  "type": "err_no_data"
+}
+---
+
+[TestHookModSuite/TestCreateHooks/contains_empty_field - 1]
+{
+ "instance": "/api/v1/hooks",
+ "invalidParams": [
+  {
+   "name": "displayName",
+   "reason": "DisplayName is a required field"
+  }
+ ],
+ "title": "invalid params",
+ "type": "err_params"
 }
 ---
