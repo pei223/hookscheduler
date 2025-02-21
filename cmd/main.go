@@ -13,7 +13,9 @@ import (
 	"github.com/pei223/hook-scheduler/internal/domain/hook"
 	"github.com/pei223/hook-scheduler/internal/usecase"
 	"github.com/pei223/hook-scheduler/internal/webapi"
+	"github.com/pei223/hook-scheduler/internal/worker"
 	"github.com/pei223/hook-scheduler/pkg/common"
+	"resty.dev/v3"
 )
 
 type Config struct {
@@ -44,8 +46,11 @@ func Serve() {
 		panic(err)
 	}
 
-	hookSvc := hook.NewHookService(db, hook.NewHookRepo())
+	apiClient := resty.New()
+
+	hookSvc := hook.NewHookService(db, hook.NewHookRepo(), apiClient)
 	hookUsecase := usecase.NewHookUsecase(hookSvc)
+	hookExecUsecase := usecase.NewHookExecUsecase(db, hookSvc)
 	hookRouter := webapi.NewHookRouter(hookUsecase)
 
 	router := webapi.NewRouter(
@@ -58,6 +63,8 @@ func Serve() {
 		Handler: router,
 	}
 
+	invoker := worker.NewInvoker(hookExecUsecase)
+
 	go func() {
 		defer stop()
 
@@ -68,6 +75,9 @@ func Serve() {
 			return
 		}
 	}()
+
+	go invoker.Start(ctx)
+
 	<-ctx.Done()
 	if err := server.Shutdown(ctx); err != nil {
 		logger.Error().Err(err).Msg("failed to shutdown server")
