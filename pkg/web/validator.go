@@ -1,6 +1,7 @@
 package web
 
 import (
+	"github.com/ettle/strcase"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -38,8 +39,7 @@ func ToInvalidParams(errs validator.ValidationErrors) *[]errorcommon.InvalidPara
 		msg := err.Translate(defaultTrans)
 		invalidParams = append(invalidParams, errorcommon.InvalidParam{
 			Reason: msg,
-			// TODO フィールド名がパスカルケースになってるので変換
-			Name: err.Field(),
+			Name:   strcase.ToCamel(err.Field()),
 		})
 	}
 	if len(invalidParams) == 0 {
