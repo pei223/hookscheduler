@@ -3,6 +3,7 @@ package hook_test
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
@@ -151,6 +152,40 @@ func (s *hookRepoTestSuite) TestGetHook() {
 			hook, err := s.repo.GetHook(ctx, tx, uuid.New())
 			s.Assert().Error(err)
 			s.Assert().Nil(hook)
+			return nil
+		}, nil)
+		lo.Must(0, err)
+	})
+}
+
+func (s *hookRepoTestSuite) TestGetAllHooks() {
+	ctx := context.TODO()
+
+	err := db.ExecTx(ctx, s.db, func(ctx context.Context, tx *sql.Tx) error {
+		for i := 0; i < 4; i++ {
+			hook := models.Hook{
+				DisplayName: fmt.Sprintf("hook%d", i+1),
+				HookID:      uuid.New(),
+				URL:         "http://example.com",
+				Method:      "POST",
+				Body: types.JSONB{
+					"testKey": "testValue",
+				},
+			}
+			err := hook.Insert(ctx, s.db, boil.Infer())
+			lo.Must(0, err)
+		}
+		return nil
+	}, nil)
+	lo.Must(0, err)
+
+	s.Run("success(limit/offset)", func() {
+		err := db.ReadOnlyTx(ctx, s.db, func(ctx context.Context, tx *sql.Tx) error {
+			hooks, err := s.repo.GetAllHooks(ctx, tx, 2, 1)
+			s.NoError(err)
+			s.Len(hooks, 2)
+			s.Equal("hook2", hooks[0].DisplayName)
+			s.Equal("hook3", hooks[1].DisplayName)
 			return nil
 		}, nil)
 		lo.Must(0, err)

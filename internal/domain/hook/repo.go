@@ -7,13 +7,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/pei223/hook-scheduler/internal/models"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
-
-type HookRepo interface {
-	GetHook(ctx context.Context, tx *sql.Tx, hookId uuid.UUID) (*models.Hook, error)
-	DeleteHook(ctx context.Context, tx *sql.Tx, hookId uuid.UUID) error
-	CreateHook(ctx context.Context, tx *sql.Tx, params *HookCreateParams) (*models.Hook, error)
-}
 
 type hookRepo struct {
 }
@@ -45,4 +40,12 @@ func (t *hookRepo) CreateHook(ctx context.Context, tx *sql.Tx, params *HookCreat
 	}
 	err := hook.Insert(ctx, tx, boil.Infer())
 	return hook, err
+}
+
+func (t *hookRepo) GetAllHooks(ctx context.Context, tx *sql.Tx, limit int, offset int) (models.HookSlice, error) {
+	return models.Hooks(
+		qm.Limit(limit),
+		qm.Offset(offset),
+		qm.OrderBy(models.HookColumns.DisplayName),
+	).All(ctx, tx)
 }
