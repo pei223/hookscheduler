@@ -9,13 +9,13 @@ import (
 
 type HookCreateParams struct {
 	DisplayName string      `json:"displayName" validate:"required,max=20,min=1"`
-	URL         string      `json:"url" validate:"required,max=20,min=1"`
+	URL         string      `json:"url" validate:"required,url"`
 	Method      string      `json:"method" validate:"required,max=20,min=1"`
-	Body        types.JSONB `json:"body" validate:"required,max=20,min=1"`
-	Headers     types.JSONB `json:"headers" validate:"required,max=20,min=1"`
+	Body        types.JSONB `json:"body" validate:"required"`
+	Headers     types.JSONB `json:"headers" validate:"required"`
 }
 
-func (p *HookCreateParams) Validate() *[]errorcommon.InvalidParam {
+func (p *HookCreateParams) Validate() []errorcommon.InvalidParam {
 	invalidParams := web.SchemaValidate(p)
 	if invalidParams != nil {
 		return invalidParams
@@ -29,14 +29,11 @@ func (p *HookCreateParams) Validate() *[]errorcommon.InvalidParam {
 			Reason: "method must be one of GET, POST, PUT, PATCH, DELETE",
 		}
 		if invalidParams == nil {
-			return &[]errorcommon.InvalidParam{
+			return []errorcommon.InvalidParam{
 				invalidParam,
 			}
 		}
-		invalidParams_ := *invalidParams
-		invalidParams_ = append(invalidParams_, invalidParam)
-		return &invalidParams_
+		invalidParams = append(invalidParams, invalidParam)
 	}
-	// ここでカスタムvalidateなど
-	return nil
+	return invalidParams
 }

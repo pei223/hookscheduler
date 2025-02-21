@@ -1,0 +1,67 @@
+
+[TestValidation/too_long_displayName - 1]
+[
+ {
+  "name": "displayName",
+  "reason": "DisplayName must be a maximum of 20 characters in length"
+ }
+]
+---
+
+[TestValidation/empty_displayName - 1]
+[
+ {
+  "name": "displayName",
+  "reason": "DisplayName is a required field"
+ }
+]
+---
+
+[TestValidation/invalid_url - 1]
+[
+ {
+  "name": "url",
+  "reason": "URL must be a valid URL"
+ }
+]
+---
+
+[TestValidation/empty_url - 1]
+[
+ {
+  "name": "url",
+  "reason": "URL is a required field"
+ }
+]
+---
+
+[TestValidation/invalid_method - 1]
+[
+ {
+  "name": "method",
+  "reason": "method must be one of GET, POST, PUT, PATCH, DELETE"
+ }
+]
+---
+
+[TestValidation/empty_method - 1]
+[
+ {
+  "name": "method",
+  "reason": "Method is a required field"
+ }
+]
+---
+
+[TestValidation/empty_method_and_displayName - 1]
+[
+ {
+  "name": "displayName",
+  "reason": "DisplayName is a required field"
+ },
+ {
+  "name": "method",
+  "reason": "Method is a required field"
+ }
+]
+---
