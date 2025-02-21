@@ -1,0 +1,34 @@
+## hook API
+### Create
+POST  http://localhost:80/api/v1/hooks
+Content-Type: application/json
+
+{
+    "displayName": "testhook1",
+    "url": "{{webhookURL}}",
+    "method": "POST",
+    "headers": {
+        "Test-Header": "hoge"
+    },
+    "body": {
+        "name": "hook",
+        "description": "hook description",
+        "enabled": true,
+        "events": [
+            "event1",
+            "event2"
+        ]
+    }
+}
+
+@hook_id=YOUR_HOOK_ID
+
+
+### Get
+GET  http://localhost:80/api/v1/hooks/{{hook_id}}
+Content-Type: application/json
+
+
+### Delete
+DELETE  http://localhost:80/api/v1/hooks/{{hook_id}}
+Content-Type: application/json

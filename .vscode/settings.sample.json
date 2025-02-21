@@ -1,0 +1,7 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "webhookURL": "<Your webhook url>"
+    }
+  }
+}
