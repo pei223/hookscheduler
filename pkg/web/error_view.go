@@ -32,7 +32,6 @@ func ErrorResFrom(c *gin.Context, err error) (int, ErrorResponse) {
 		return http.StatusNotFound, ErrorResponse{
 			Title:    "no data",
 			Type:     errorcommon.ErrNoData,
-			Detail:   err.Error(),
 			Instance: c.Request.URL.Path,
 		}
 	}
@@ -46,7 +45,6 @@ func ErrorResFrom(c *gin.Context, err error) (int, ErrorResponse) {
 			Instance:      c.Request.URL.Path,
 			Title:         commonErr.Title,
 			Type:          commonErr.Type,
-			Detail:        commonErr.Error(),
 			InvalidParams: commonErr.InvalidParams,
 		}
 	}
@@ -54,6 +52,5 @@ func ErrorResFrom(c *gin.Context, err error) (int, ErrorResponse) {
 		Instance: c.Request.URL.Path,
 		Title:    err.Error(),
 		Type:     errorcommon.ErrOthers,
-		Detail:   err.Error(),
 	}
 }
