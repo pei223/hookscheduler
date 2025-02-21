@@ -67,6 +67,21 @@ func (mr *MockHookRepoMockRecorder) DeleteHook(arg0, arg1, arg2 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteHook", reflect.TypeOf((*MockHookRepo)(nil).DeleteHook), arg0, arg1, arg2)
 }
 
+// GetAllHooks mocks base method.
+func (m *MockHookRepo) GetAllHooks(arg0 context.Context, arg1 *sql.Tx, arg2, arg3 int) (models.HookSlice, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllHooks", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(models.HookSlice)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllHooks indicates an expected call of GetAllHooks.
+func (mr *MockHookRepoMockRecorder) GetAllHooks(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHooks", reflect.TypeOf((*MockHookRepo)(nil).GetAllHooks), arg0, arg1, arg2, arg3)
+}
+
 // GetHook mocks base method.
 func (m *MockHookRepo) GetHook(arg0 context.Context, arg1 *sql.Tx, arg2 uuid.UUID) (*models.Hook, error) {
 	m.ctrl.T.Helper()

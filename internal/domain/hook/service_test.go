@@ -4,10 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"net/http"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
+	"github.com/jarcoal/httpmock"
 	_ "github.com/lib/pq"
 	"github.com/pei223/hook-scheduler/internal/domain/hook"
 	"github.com/pei223/hook-scheduler/internal/domain/hook/mock_hook"
@@ -15,6 +17,7 @@ import (
 	"github.com/pei223/hook-scheduler/internal/test_common"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/suite"
+	"resty.dev/v3"
 )
 
 type hookModTestSuite struct {
@@ -22,13 +25,15 @@ type hookModTestSuite struct {
 
 	mockRepo *mock_hook.MockHookRepo
 	svc      *hook.HookService
+	client   *http.Client
 }
 
 func (s *hookModTestSuite) SetupSuite() {
 	db := lo.Must(sql.Open("postgres", test_common.TestDatabaseConnectionString))
 	gomock := gomock.NewController(s.T())
 	s.mockRepo = mock_hook.NewMockHookRepo(gomock)
-	s.svc = hook.NewHookService(db, s.mockRepo)
+	s.client = &http.Client{}
+	s.svc = hook.NewHookService(db, s.mockRepo, resty.NewWithClient(s.client))
 }
 
 func TestHookModSuite(t *testing.T) {
@@ -108,5 +113,77 @@ func (s *hookModTestSuite) TestCreateHook() {
 		hook, err := s.svc.CreateHook(ctx, params)
 		s.Assert().Error(err)
 		s.Assert().Nil(hook)
+	})
+}
+
+func (s *hookModTestSuite) TestGetAllHooks() {
+	ctx := context.TODO()
+
+	s.Run("success", func() {
+		s.mockRepo.EXPECT().GetAllHooks(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(models.HookSlice{
+			&models.Hook{
+				HookID:      uuid.New(),
+				DisplayName: "test",
+			},
+			&models.Hook{
+				HookID:      uuid.New(),
+				DisplayName: "test2",
+			},
+		}, nil).Times(1)
+		hooks, err := s.svc.GetAllHooks(ctx, 10, 0)
+		s.Assert().NoError(err)
+		s.Assert().NotNil(hooks)
+		s.Assert().Len(hooks, 2)
+	})
+
+	s.Run("error", func() {
+		s.mockRepo.EXPECT().GetAllHooks(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("test err")).Times(1)
+		hooks, err := s.svc.GetAllHooks(ctx, 10, 0)
+		s.Assert().Error(err)
+		s.Assert().Nil(hooks)
+	})
+}
+
+func (s *hookModTestSuite) TestExecHookInTx() {
+	ctx := context.TODO()
+
+	s.Run("success", func() {
+		s.mockRepo.EXPECT().GetHook(gomock.Any(), gomock.Any(), gomock.Any()).Return(&models.Hook{
+			DisplayName: "test",
+			URL:         "http://test.com",
+			Method:      "POST",
+		}, nil)
+
+		httpmock.ActivateNonDefault(s.client)
+		defer httpmock.DeactivateAndReset()
+
+		httpmock.RegisterResponder("POST", "http://test.com", httpmock.NewStringResponder(201, ""))
+
+		status, err := s.svc.ExecHookInTx(ctx, nil, uuid.New())
+		s.Require().NoError(err)
+		s.Require().Equal(201, status)
+	})
+
+	s.Run("success (internal error)", func() {
+		s.mockRepo.EXPECT().GetHook(gomock.Any(), gomock.Any(), gomock.Any()).Return(&models.Hook{
+			DisplayName: "test",
+			URL:         "http://test.com",
+			Method:      "POST",
+		}, nil)
+
+		httpmock.ActivateNonDefault(s.client)
+		defer httpmock.DeactivateAndReset()
+
+		httpmock.RegisterResponder("POST", "http://test.com", httpmock.NewStringResponder(500, ""))
+
+		status, err := s.svc.ExecHookInTx(ctx, nil, uuid.New())
+		s.Require().NoError(err)
+		s.Require().Equal(500, status)
+	})
+
+	s.Run("get hook error", func() {
+		s.mockRepo.EXPECT().GetHook(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("test error"))
+		_, err := s.svc.ExecHookInTx(ctx, nil, uuid.New())
+		s.Require().Error(err)
 	})
 }

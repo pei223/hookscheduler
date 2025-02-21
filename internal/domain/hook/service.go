@@ -3,21 +3,32 @@ package hook
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/pei223/hook-scheduler/internal/models"
 	"github.com/pei223/hook-scheduler/pkg/db"
+	"resty.dev/v3"
 )
 
-type HookService struct {
-	db   *sql.DB
-	repo HookRepo
+type HookRepo interface {
+	GetHook(ctx context.Context, tx *sql.Tx, hookId uuid.UUID) (*models.Hook, error)
+	DeleteHook(ctx context.Context, tx *sql.Tx, hookId uuid.UUID) error
+	CreateHook(ctx context.Context, tx *sql.Tx, params *HookCreateParams) (*models.Hook, error)
+	GetAllHooks(ctx context.Context, tx *sql.Tx, limit int, offset int) (models.HookSlice, error)
 }
 
-func NewHookService(db *sql.DB, repo HookRepo) *HookService {
+type HookService struct {
+	db        *sql.DB
+	repo      HookRepo
+	apiClient *resty.Client
+}
+
+func NewHookService(db *sql.DB, repo HookRepo, apiClient *resty.Client) *HookService {
 	return &HookService{
-		repo: repo,
-		db:   db,
+		repo:      repo,
+		db:        db,
+		apiClient: apiClient,
 	}
 }
 
@@ -73,4 +84,37 @@ func (h *HookService) CreateHook(ctx context.Context, params *HookCreateParams) 
 
 func (h *HookService) CreateHookInTx(ctx context.Context, tx *sql.Tx, params *HookCreateParams) (*models.Hook, error) {
 	return h.repo.CreateHook(ctx, tx, params)
+}
+
+func (h *HookService) GetAllHooks(ctx context.Context, limit, offset int) (models.HookSlice, error) {
+	var hooks models.HookSlice
+	err := db.ReadOnlyTx(
+		ctx,
+		h.db,
+		func(ctx context.Context, tx *sql.Tx) error {
+			var err error
+			hooks, err = h.repo.GetAllHooks(ctx, tx, limit, offset)
+			return err
+		},
+		nil,
+	)
+	return hooks, err
+}
+
+func (h *HookService) ExecHookInTx(ctx context.Context, tx *sql.Tx, hookID uuid.UUID) (int, error) {
+	hook, err := h.repo.GetHook(ctx, tx, hookID)
+	if err != nil {
+		return 0, err
+	}
+
+	headers := map[string]string{}
+	for k, v := range hook.Headers {
+		headers[k] = fmt.Sprintf("%v", v)
+	}
+	headers["Content-Type"] = "application/json"
+
+	res, err := h.apiClient.R().SetHeaders(
+		headers,
+	).SetBody(hook.Body).Execute(hook.Method, hook.URL)
+	return res.StatusCode(), err
 }
