@@ -15,7 +15,6 @@ import (
 
 	"github.com/friendsofgo/errors"
 	"github.com/google/uuid"
-	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -25,67 +24,67 @@ import (
 
 // HookSchedule is an object representing the database table.
 type HookSchedule struct {
-	HookScheduleID        uuid.UUID  `boil:"hook_schedule_id" json:"hook_schedule_id" toml:"hook_schedule_id" yaml:"hook_schedule_id"`
-	HookID                uuid.UUID  `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
-	DisplayName           string     `boil:"display_name" json:"display_name" toml:"display_name" yaml:"display_name"`
-	Description           string     `boil:"description" json:"description" toml:"description" yaml:"description"`
-	ScheduleIntervalUnit  int16      `boil:"schedule_interval_unit" json:"schedule_interval_unit" toml:"schedule_interval_unit" yaml:"schedule_interval_unit"`
-	ScheduleIntervalValue int        `boil:"schedule_interval_value" json:"schedule_interval_value" toml:"schedule_interval_value" yaml:"schedule_interval_value"`
-	ScheduleTimeMonth     null.Int16 `boil:"schedule_time_month" json:"schedule_time_month,omitempty" toml:"schedule_time_month" yaml:"schedule_time_month,omitempty"`
-	ScheduleTimeDay       null.Int16 `boil:"schedule_time_day" json:"schedule_time_day,omitempty" toml:"schedule_time_day" yaml:"schedule_time_day,omitempty"`
-	ScheduleTimeHour      null.Int16 `boil:"schedule_time_hour" json:"schedule_time_hour,omitempty" toml:"schedule_time_hour" yaml:"schedule_time_hour,omitempty"`
-	ScheduleTimeMinute    null.Int16 `boil:"schedule_time_minute" json:"schedule_time_minute,omitempty" toml:"schedule_time_minute" yaml:"schedule_time_minute,omitempty"`
+	HookScheduleID       uuid.UUID `boil:"hook_schedule_id" json:"hook_schedule_id" toml:"hook_schedule_id" yaml:"hook_schedule_id"`
+	HookID               uuid.UUID `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
+	DisplayName          string    `boil:"display_name" json:"display_name" toml:"display_name" yaml:"display_name"`
+	Description          string    `boil:"description" json:"description" toml:"description" yaml:"description"`
+	ScheduleIntervalUnit int16     `boil:"schedule_interval_unit" json:"schedule_interval_unit" toml:"schedule_interval_unit" yaml:"schedule_interval_unit"`
+	ScheduleTimeMonth    int16     `boil:"schedule_time_month" json:"schedule_time_month" toml:"schedule_time_month" yaml:"schedule_time_month"`
+	ScheduleTimeDay      int16     `boil:"schedule_time_day" json:"schedule_time_day" toml:"schedule_time_day" yaml:"schedule_time_day"`
+	ScheduleTimeHour     int16     `boil:"schedule_time_hour" json:"schedule_time_hour" toml:"schedule_time_hour" yaml:"schedule_time_hour"`
+	ScheduleTimeMinute   int16     `boil:"schedule_time_minute" json:"schedule_time_minute" toml:"schedule_time_minute" yaml:"schedule_time_minute"`
+	ScheduleTimeSecond   int16     `boil:"schedule_time_second" json:"schedule_time_second" toml:"schedule_time_second" yaml:"schedule_time_second"`
 
 	R *hookScheduleR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L hookScheduleL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var HookScheduleColumns = struct {
-	HookScheduleID        string
-	HookID                string
-	DisplayName           string
-	Description           string
-	ScheduleIntervalUnit  string
-	ScheduleIntervalValue string
-	ScheduleTimeMonth     string
-	ScheduleTimeDay       string
-	ScheduleTimeHour      string
-	ScheduleTimeMinute    string
+	HookScheduleID       string
+	HookID               string
+	DisplayName          string
+	Description          string
+	ScheduleIntervalUnit string
+	ScheduleTimeMonth    string
+	ScheduleTimeDay      string
+	ScheduleTimeHour     string
+	ScheduleTimeMinute   string
+	ScheduleTimeSecond   string
 }{
-	HookScheduleID:        "hook_schedule_id",
-	HookID:                "hook_id",
-	DisplayName:           "display_name",
-	Description:           "description",
-	ScheduleIntervalUnit:  "schedule_interval_unit",
-	ScheduleIntervalValue: "schedule_interval_value",
-	ScheduleTimeMonth:     "schedule_time_month",
-	ScheduleTimeDay:       "schedule_time_day",
-	ScheduleTimeHour:      "schedule_time_hour",
-	ScheduleTimeMinute:    "schedule_time_minute",
+	HookScheduleID:       "hook_schedule_id",
+	HookID:               "hook_id",
+	DisplayName:          "display_name",
+	Description:          "description",
+	ScheduleIntervalUnit: "schedule_interval_unit",
+	ScheduleTimeMonth:    "schedule_time_month",
+	ScheduleTimeDay:      "schedule_time_day",
+	ScheduleTimeHour:     "schedule_time_hour",
+	ScheduleTimeMinute:   "schedule_time_minute",
+	ScheduleTimeSecond:   "schedule_time_second",
 }
 
 var HookScheduleTableColumns = struct {
-	HookScheduleID        string
-	HookID                string
-	DisplayName           string
-	Description           string
-	ScheduleIntervalUnit  string
-	ScheduleIntervalValue string
-	ScheduleTimeMonth     string
-	ScheduleTimeDay       string
-	ScheduleTimeHour      string
-	ScheduleTimeMinute    string
+	HookScheduleID       string
+	HookID               string
+	DisplayName          string
+	Description          string
+	ScheduleIntervalUnit string
+	ScheduleTimeMonth    string
+	ScheduleTimeDay      string
+	ScheduleTimeHour     string
+	ScheduleTimeMinute   string
+	ScheduleTimeSecond   string
 }{
-	HookScheduleID:        "hook_schedules.hook_schedule_id",
-	HookID:                "hook_schedules.hook_id",
-	DisplayName:           "hook_schedules.display_name",
-	Description:           "hook_schedules.description",
-	ScheduleIntervalUnit:  "hook_schedules.schedule_interval_unit",
-	ScheduleIntervalValue: "hook_schedules.schedule_interval_value",
-	ScheduleTimeMonth:     "hook_schedules.schedule_time_month",
-	ScheduleTimeDay:       "hook_schedules.schedule_time_day",
-	ScheduleTimeHour:      "hook_schedules.schedule_time_hour",
-	ScheduleTimeMinute:    "hook_schedules.schedule_time_minute",
+	HookScheduleID:       "hook_schedules.hook_schedule_id",
+	HookID:               "hook_schedules.hook_id",
+	DisplayName:          "hook_schedules.display_name",
+	Description:          "hook_schedules.description",
+	ScheduleIntervalUnit: "hook_schedules.schedule_interval_unit",
+	ScheduleTimeMonth:    "hook_schedules.schedule_time_month",
+	ScheduleTimeDay:      "hook_schedules.schedule_time_day",
+	ScheduleTimeHour:     "hook_schedules.schedule_time_hour",
+	ScheduleTimeMinute:   "hook_schedules.schedule_time_minute",
+	ScheduleTimeSecond:   "hook_schedules.schedule_time_second",
 }
 
 // Generated where
@@ -121,89 +120,28 @@ func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
-type whereHelperint struct{ field string }
-
-func (w whereHelperint) EQ(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
-func (w whereHelperint) NEQ(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
-func (w whereHelperint) LT(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
-func (w whereHelperint) LTE(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
-func (w whereHelperint) GT(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
-func (w whereHelperint) GTE(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
-func (w whereHelperint) IN(slice []int) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelperint) NIN(slice []int) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-type whereHelpernull_Int16 struct{ field string }
-
-func (w whereHelpernull_Int16) EQ(x null.Int16) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_Int16) NEQ(x null.Int16) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_Int16) LT(x null.Int16) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_Int16) LTE(x null.Int16) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_Int16) GT(x null.Int16) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_Int16) GTE(x null.Int16) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-func (w whereHelpernull_Int16) IN(slice []int16) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelpernull_Int16) NIN(slice []int16) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-func (w whereHelpernull_Int16) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Int16) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 var HookScheduleWhere = struct {
-	HookScheduleID        whereHelperuuid_UUID
-	HookID                whereHelperuuid_UUID
-	DisplayName           whereHelperstring
-	Description           whereHelperstring
-	ScheduleIntervalUnit  whereHelperint16
-	ScheduleIntervalValue whereHelperint
-	ScheduleTimeMonth     whereHelpernull_Int16
-	ScheduleTimeDay       whereHelpernull_Int16
-	ScheduleTimeHour      whereHelpernull_Int16
-	ScheduleTimeMinute    whereHelpernull_Int16
+	HookScheduleID       whereHelperuuid_UUID
+	HookID               whereHelperuuid_UUID
+	DisplayName          whereHelperstring
+	Description          whereHelperstring
+	ScheduleIntervalUnit whereHelperint16
+	ScheduleTimeMonth    whereHelperint16
+	ScheduleTimeDay      whereHelperint16
+	ScheduleTimeHour     whereHelperint16
+	ScheduleTimeMinute   whereHelperint16
+	ScheduleTimeSecond   whereHelperint16
 }{
-	HookScheduleID:        whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_schedule_id\""},
-	HookID:                whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_id\""},
-	DisplayName:           whereHelperstring{field: "\"hook_schedules\".\"display_name\""},
-	Description:           whereHelperstring{field: "\"hook_schedules\".\"description\""},
-	ScheduleIntervalUnit:  whereHelperint16{field: "\"hook_schedules\".\"schedule_interval_unit\""},
-	ScheduleIntervalValue: whereHelperint{field: "\"hook_schedules\".\"schedule_interval_value\""},
-	ScheduleTimeMonth:     whereHelpernull_Int16{field: "\"hook_schedules\".\"schedule_time_month\""},
-	ScheduleTimeDay:       whereHelpernull_Int16{field: "\"hook_schedules\".\"schedule_time_day\""},
-	ScheduleTimeHour:      whereHelpernull_Int16{field: "\"hook_schedules\".\"schedule_time_hour\""},
-	ScheduleTimeMinute:    whereHelpernull_Int16{field: "\"hook_schedules\".\"schedule_time_minute\""},
+	HookScheduleID:       whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_schedule_id\""},
+	HookID:               whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_id\""},
+	DisplayName:          whereHelperstring{field: "\"hook_schedules\".\"display_name\""},
+	Description:          whereHelperstring{field: "\"hook_schedules\".\"description\""},
+	ScheduleIntervalUnit: whereHelperint16{field: "\"hook_schedules\".\"schedule_interval_unit\""},
+	ScheduleTimeMonth:    whereHelperint16{field: "\"hook_schedules\".\"schedule_time_month\""},
+	ScheduleTimeDay:      whereHelperint16{field: "\"hook_schedules\".\"schedule_time_day\""},
+	ScheduleTimeHour:     whereHelperint16{field: "\"hook_schedules\".\"schedule_time_hour\""},
+	ScheduleTimeMinute:   whereHelperint16{field: "\"hook_schedules\".\"schedule_time_minute\""},
+	ScheduleTimeSecond:   whereHelperint16{field: "\"hook_schedules\".\"schedule_time_second\""},
 }
 
 // HookScheduleRels is where relationship names are stored.
@@ -234,9 +172,9 @@ func (r *hookScheduleR) GetHook() *Hook {
 type hookScheduleL struct{}
 
 var (
-	hookScheduleAllColumns            = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_interval_unit", "schedule_interval_value", "schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute"}
-	hookScheduleColumnsWithoutDefault = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_interval_unit", "schedule_interval_value"}
-	hookScheduleColumnsWithDefault    = []string{"schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute"}
+	hookScheduleAllColumns            = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_interval_unit", "schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute", "schedule_time_second"}
+	hookScheduleColumnsWithoutDefault = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_interval_unit", "schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute", "schedule_time_second"}
+	hookScheduleColumnsWithDefault    = []string{}
 	hookSchedulePrimaryKeyColumns     = []string{"hook_schedule_id"}
 	hookScheduleGeneratedColumns      = []string{}
 )

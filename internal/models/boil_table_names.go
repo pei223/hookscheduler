@@ -5,10 +5,12 @@ package models
 
 var TableNames = struct {
 	HookHistories string
+	HookResults   string
 	HookSchedules string
 	Hooks         string
 }{
 	HookHistories: "hook_histories",
+	HookResults:   "hook_results",
 	HookSchedules: "hook_schedules",
 	Hooks:         "hooks",
 }

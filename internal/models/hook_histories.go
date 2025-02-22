@@ -223,15 +223,26 @@ var HookHistoryWhere = struct {
 
 // HookHistoryRels is where relationship names are stored.
 var HookHistoryRels = struct {
-}{}
+	HookResult string
+}{
+	HookResult: "HookResult",
+}
 
 // hookHistoryR is where relationships are stored.
 type hookHistoryR struct {
+	HookResult *HookResult `boil:"HookResult" json:"HookResult" toml:"HookResult" yaml:"HookResult"`
 }
 
 // NewStruct creates a new relationship struct
 func (*hookHistoryR) NewStruct() *hookHistoryR {
 	return &hookHistoryR{}
+}
+
+func (r *hookHistoryR) GetHookResult() *HookResult {
+	if r == nil {
+		return nil
+	}
+	return r.HookResult
 }
 
 // hookHistoryL is where Load methods for each relationship are stored.
@@ -548,6 +559,184 @@ func (q hookHistoryQuery) Exists(ctx context.Context, exec boil.ContextExecutor)
 	}
 
 	return count > 0, nil
+}
+
+// HookResult pointed to by the foreign key.
+func (o *HookHistory) HookResult(mods ...qm.QueryMod) hookResultQuery {
+	queryMods := []qm.QueryMod{
+		qm.Where("\"hook_history_id\" = ?", o.HookHistoryID),
+	}
+
+	queryMods = append(queryMods, mods...)
+
+	return HookResults(queryMods...)
+}
+
+// LoadHookResult allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-1 relationship.
+func (hookHistoryL) LoadHookResult(ctx context.Context, e boil.ContextExecutor, singular bool, maybeHookHistory interface{}, mods queries.Applicator) error {
+	var slice []*HookHistory
+	var object *HookHistory
+
+	if singular {
+		var ok bool
+		object, ok = maybeHookHistory.(*HookHistory)
+		if !ok {
+			object = new(HookHistory)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeHookHistory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeHookHistory))
+			}
+		}
+	} else {
+		s, ok := maybeHookHistory.(*[]*HookHistory)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeHookHistory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeHookHistory))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &hookHistoryR{}
+		}
+		args[object.HookHistoryID] = struct{}{}
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &hookHistoryR{}
+			}
+
+			args[obj.HookHistoryID] = struct{}{}
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`hook_results`),
+		qm.WhereIn(`hook_results.hook_history_id in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load HookResult")
+	}
+
+	var resultSlice []*HookResult
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice HookResult")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results of eager load for hook_results")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for hook_results")
+	}
+
+	if len(hookResultAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(resultSlice) == 0 {
+		return nil
+	}
+
+	if singular {
+		foreign := resultSlice[0]
+		object.R.HookResult = foreign
+		if foreign.R == nil {
+			foreign.R = &hookResultR{}
+		}
+		foreign.R.HookHistory = object
+	}
+
+	for _, local := range slice {
+		for _, foreign := range resultSlice {
+			if queries.Equal(local.HookHistoryID, foreign.HookHistoryID) {
+				local.R.HookResult = foreign
+				if foreign.R == nil {
+					foreign.R = &hookResultR{}
+				}
+				foreign.R.HookHistory = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// SetHookResult of the hookHistory to the related item.
+// Sets o.R.HookResult to related.
+// Adds o to related.R.HookHistory.
+func (o *HookHistory) SetHookResult(ctx context.Context, exec boil.ContextExecutor, insert bool, related *HookResult) error {
+	var err error
+
+	if insert {
+		queries.Assign(&related.HookHistoryID, o.HookHistoryID)
+
+		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
+			return errors.Wrap(err, "failed to insert into foreign table")
+		}
+	} else {
+		updateQuery := fmt.Sprintf(
+			"UPDATE \"hook_results\" SET %s WHERE %s",
+			strmangle.SetParamNames("\"", "\"", 1, []string{"hook_history_id"}),
+			strmangle.WhereClause("\"", "\"", 2, hookResultPrimaryKeyColumns),
+		)
+		values := []interface{}{o.HookHistoryID, related.HookHistoryID}
+
+		if boil.IsDebug(ctx) {
+			writer := boil.DebugWriterFrom(ctx)
+			fmt.Fprintln(writer, updateQuery)
+			fmt.Fprintln(writer, values)
+		}
+		if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+			return errors.Wrap(err, "failed to update foreign table")
+		}
+
+		queries.Assign(&related.HookHistoryID, o.HookHistoryID)
+	}
+
+	if o.R == nil {
+		o.R = &hookHistoryR{
+			HookResult: related,
+		}
+	} else {
+		o.R.HookResult = related
+	}
+
+	if related.R == nil {
+		related.R = &hookResultR{
+			HookHistory: o,
+		}
+	} else {
+		related.R.HookHistory = o
+	}
+	return nil
 }
 
 // HookHistories retrieves all the records using an executor.

@@ -14,14 +14,14 @@ create table if not exists hook_schedules (
   , display_name varchar(200) not null
   , description text not null
   -- hook execution frequency
-  -- 1: minutes, 2: hours, 3: day, 4: month
+  -- 1: minutes, 2: hours, 3: day, 5: month, 6: year
   , schedule_interval_unit smallint not null
-  , schedule_interval_value int not null
   -- hook execution time
-  , schedule_time_month smallint
-  , schedule_time_day smallint
-  , schedule_time_hour smallint
-  , schedule_time_minute smallint
+  , schedule_time_month smallint not null
+  , schedule_time_day smallint not null
+  , schedule_time_hour smallint not null
+  , schedule_time_minute smallint not null
+  , schedule_time_second smallint not null
 );
 
 alter table hook_schedules 
@@ -42,3 +42,16 @@ create table if not exists hook_histories (
   , hook_snapshot jsonb
   , schedule_snapshot jsonb
 );
+
+
+create table if not exists hook_results (
+  hook_history_id uuid primary key
+  , http_status_code int not null
+  , response_body jsonb
+  , response_headers jsonb
+);
+
+alter table hook_results
+  add constraint fk_hook_results_hook_history_id
+  foreign key (hook_history_id) references hook_histories(hook_history_id)
+  on delete cascade on update cascade;
