@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"os/signal"
 	"syscall"
@@ -61,6 +63,9 @@ func Serve() {
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%s", cfg.ApiServerPort),
 		Handler: router,
+		BaseContext: func(_ net.Listener) context.Context {
+			return ctx
+		},
 	}
 
 	invoker := worker.NewInvoker(hookExecUsecase)
@@ -70,13 +75,24 @@ func Serve() {
 
 		logger.Info().Msg("listen server")
 		if err := server.ListenAndServe(); err != nil {
-			logger.Error().Err(err).Msg("failed to start server")
-			syscall.Exit(1)
-			return
+			if err != http.ErrServerClosed {
+				logger.Error().Err(err).Msg("failed to start server")
+				syscall.Exit(1)
+				return
+			}
 		}
 	}()
 
-	go invoker.Start(ctx)
+	go func() {
+		err := invoker.Start(ctx)
+		if err != nil {
+			if !errors.Is(err, context.Canceled) {
+				logger.Error().Err(err).Msg("failed to start invoker")
+				syscall.Exit(1)
+			}
+		}
+		stop()
+	}()
 
 	<-ctx.Done()
 	if err := server.Shutdown(ctx); err != nil {

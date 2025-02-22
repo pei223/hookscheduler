@@ -102,6 +102,7 @@ func (h *HookService) GetAllHooks(ctx context.Context, limit, offset int) (model
 }
 
 func (h *HookService) ExecHookInTx(ctx context.Context, tx *sql.Tx, hookID uuid.UUID) (int, error) {
+	// TODO リトライ処理
 	hook, err := h.repo.GetHook(ctx, tx, hookID)
 	if err != nil {
 		return 0, err

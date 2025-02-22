@@ -21,7 +21,7 @@ func NewInvoker(hookExecUsecase HookExecUsecase) *Invoker {
 	}
 }
 
-func (i *Invoker) Start(ctx context.Context) {
+func (i *Invoker) Start(ctx context.Context) error {
 	logger := logger.FromContext(ctx)
 
 	logger.Info().Msg("Invoker started")
@@ -33,10 +33,14 @@ func (i *Invoker) Start(ctx context.Context) {
 		select {
 		case <-ticker.C:
 			logger.Info().Msg("Kick scheduled hooks")
-			i.hookExecUsecase.ExecuteScheduledHooks(ctx)
+			err := i.hookExecUsecase.ExecuteScheduledHooks(ctx)
+			if err != nil {
+				logger.Warn().Err(err).Msg("Failed to execute scheduled hooks")
+			}
+			// TODO: 続行不能エラーは止めたい
 		case <-ctx.Done():
 			logger.Info().Msg("Invoker stopped by context")
-			return
+			return context.Canceled
 		}
 	}
 }
