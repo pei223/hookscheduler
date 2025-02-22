@@ -3,6 +3,7 @@ package hook
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/pei223/hook-scheduler/internal/models"
@@ -42,10 +43,18 @@ func (t *hookRepo) CreateHook(ctx context.Context, tx *sql.Tx, params *HookCreat
 	return hook, err
 }
 
-func (t *hookRepo) GetAllHooks(ctx context.Context, tx *sql.Tx, limit int, offset int) (models.HookSlice, error) {
-	return models.Hooks(
+func (t *hookRepo) GetAllHooks(ctx context.Context, tx *sql.Tx, limit int, offset int) (models.HookSlice, int, error) {
+	total, err := models.Hooks().Count(ctx, tx)
+	if err != nil {
+		return nil, 0, fmt.Errorf("failed to get total hooks: %w", err)
+	}
+	hooks, err := models.Hooks(
 		qm.Limit(limit),
 		qm.Offset(offset),
 		qm.OrderBy(models.HookColumns.DisplayName),
 	).All(ctx, tx)
+	if err != nil {
+		return nil, 0, fmt.Errorf("フックの取得に失敗しました: %w", err)
+	}
+	return hooks, int(total), err
 }

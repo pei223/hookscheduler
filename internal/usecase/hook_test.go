@@ -120,3 +120,41 @@ func (s *hookModTestSuite) TestCreateHook() {
 		s.Assert().Nil(hook)
 	})
 }
+
+func (s *hookModTestSuite) TestGetAllHooks() {
+	ctx := context.TODO()
+
+	s.Run("success", func() {
+		limit := 10
+		offset := 0
+		hooks := models.HookSlice{
+			{
+				HookID:      uuid.MustParse("12345678-1234-5678-1234-567812345678"),
+				DisplayName: "test",
+				URL:         "http://test.com",
+				Method:      "POST",
+			},
+		}
+		s.mockHookService.EXPECT().GetAllHooks(gomock.Any(), limit, offset).Return(hooks, 3, nil).Times(1)
+		hooks, total, err := s.hookUsecase.GetAllHooks(ctx, limit, offset)
+		s.Require().NoError(err)
+		s.Require().Equal(hooks, models.HookSlice{
+			{
+				HookID:      uuid.MustParse("12345678-1234-5678-1234-567812345678"),
+				DisplayName: "test",
+				URL:         "http://test.com",
+				Method:      "POST",
+			},
+		})
+		s.Require().Equal(total, 3)
+	})
+
+	s.Run("error", func() {
+		limit := 10
+		offset := 0
+		s.mockHookService.EXPECT().GetAllHooks(gomock.Any(), limit, offset).Return(nil, 0, errors.New("testerror")).Times(1)
+		hooks, _, err := s.hookUsecase.GetAllHooks(ctx, limit, offset)
+		s.Require().Error(err)
+		s.Require().Nil(hooks)
+	})
+}

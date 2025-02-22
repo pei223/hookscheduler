@@ -84,3 +84,65 @@
  "type": "err_params"
 }
 ---
+
+[TestHookModSuite/TestGetAllHooks/success_(no_limit_and_offset) - 1]
+{
+ "items": [
+  {
+   "body": {
+    "createtestkey": "createvalue",
+    "testlist": [
+     "test1",
+     "test2"
+    ]
+   },
+   "description": "",
+   "displayName": "test",
+   "header": {
+    "createtestkey": "createvalue",
+    "testlist": [
+     "test1",
+     "test2"
+    ]
+   },
+   "hookId": "12345678-1234-5678-1234-567812345678",
+   "method": "POST",
+   "url": "http://test.com"
+  }
+ ],
+ "limit": 10,
+ "offset": 0,
+ "total": 4
+}
+---
+
+[TestHookModSuite/TestGetAllHooks/success_(limit_and_offset) - 1]
+{
+ "items": [
+  {
+   "body": {
+    "createtestkey": "createvalue",
+    "testlist": [
+     "test1",
+     "test2"
+    ]
+   },
+   "description": "",
+   "displayName": "test",
+   "header": {
+    "createtestkey": "createvalue",
+    "testlist": [
+     "test1",
+     "test2"
+    ]
+   },
+   "hookId": "12345678-1234-5678-1234-567812345678",
+   "method": "POST",
+   "url": "http://test.com"
+  }
+ ],
+ "limit": 5,
+ "offset": 5,
+ "total": 3
+}
+---

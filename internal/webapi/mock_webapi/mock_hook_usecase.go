@@ -66,6 +66,22 @@ func (mr *MockHookUsecaseIFMockRecorder) DeleteHook(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteHook", reflect.TypeOf((*MockHookUsecaseIF)(nil).DeleteHook), arg0, arg1)
 }
 
+// GetAllHooks mocks base method.
+func (m *MockHookUsecaseIF) GetAllHooks(arg0 context.Context, arg1, arg2 int) (models.HookSlice, int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllHooks", arg0, arg1, arg2)
+	ret0, _ := ret[0].(models.HookSlice)
+	ret1, _ := ret[1].(int)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetAllHooks indicates an expected call of GetAllHooks.
+func (mr *MockHookUsecaseIFMockRecorder) GetAllHooks(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHooks", reflect.TypeOf((*MockHookUsecaseIF)(nil).GetAllHooks), arg0, arg1, arg2)
+}
+
 // GetHook mocks base method.
 func (m *MockHookUsecaseIF) GetHook(arg0 context.Context, arg1 uuid.UUID) (*models.Hook, error) {
 	m.ctrl.T.Helper()

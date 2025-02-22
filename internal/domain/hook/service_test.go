@@ -129,16 +129,17 @@ func (s *hookModTestSuite) TestGetAllHooks() {
 				HookID:      uuid.New(),
 				DisplayName: "test2",
 			},
-		}, nil).Times(1)
-		hooks, err := s.svc.GetAllHooks(ctx, 10, 0)
+		}, 3, nil).Times(1)
+		hooks, total, err := s.svc.GetAllHooks(ctx, 10, 0)
 		s.Assert().NoError(err)
 		s.Assert().NotNil(hooks)
 		s.Assert().Len(hooks, 2)
+		s.Assert().Equal(3, total)
 	})
 
 	s.Run("error", func() {
-		s.mockRepo.EXPECT().GetAllHooks(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, errors.New("test err")).Times(1)
-		hooks, err := s.svc.GetAllHooks(ctx, 10, 0)
+		s.mockRepo.EXPECT().GetAllHooks(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(nil, 0, errors.New("test err")).Times(1)
+		hooks, _, err := s.svc.GetAllHooks(ctx, 10, 0)
 		s.Assert().Error(err)
 		s.Assert().Nil(hooks)
 	})

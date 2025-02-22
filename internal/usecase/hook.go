@@ -13,6 +13,7 @@ type HookServiceIF interface {
 	GetHook(ctx context.Context, hookId uuid.UUID) (*models.Hook, error)
 	DeleteHook(ctx context.Context, hookId uuid.UUID) error
 	CreateHook(ctx context.Context, params *hook.HookCreateParams) (*models.Hook, error)
+	GetAllHooks(ctx context.Context, limit int, offset int) (models.HookSlice, int, error)
 }
 
 type HookUsecase struct {
@@ -37,4 +38,8 @@ func (t *HookUsecase) DeleteHook(ctx context.Context, hookId uuid.UUID) error {
 
 func (t *HookUsecase) CreateHook(ctx context.Context, params *hook.HookCreateParams) (*models.Hook, error) {
 	return t.hookSvc.CreateHook(ctx, params)
+}
+
+func (t *HookUsecase) GetAllHooks(ctx context.Context, limit int, offset int) (models.HookSlice, int, error) {
+	return t.hookSvc.GetAllHooks(ctx, limit, offset)
 }

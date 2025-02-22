@@ -152,3 +152,56 @@ func (s *routerTestSuite) TestCreateHooks() {
 		snaps.MatchJSON(s.T(), w.Body.String())
 	})
 }
+
+func (s *routerTestSuite) TestGetAllHooks() {
+	dummyBody := types.JSONB{
+		"createtestkey": "createvalue",
+		"testlist": []string{
+			"test1", "test2",
+		},
+	}
+	dummyHeaders := types.JSONB{
+		"createtestkey": "createvalue",
+		"testlist": []string{
+			"test1", "test2",
+		},
+	}
+	s.Run("success (no limit and offset)", func() {
+		s.hookUsecase.EXPECT().GetAllHooks(gomock.Any(), 10, 0).Return(models.HookSlice{
+			{
+				HookID:      uuid.MustParse("12345678-1234-5678-1234-567812345678"),
+				DisplayName: "test",
+				URL:         "http://test.com",
+				Method:      "POST",
+				Body:        dummyBody,
+				Headers:     dummyHeaders,
+			},
+		}, 4, nil).Times(1)
+
+		req := lo.Must(http.NewRequest("GET", "/api/v1/hooks?limit=10&offset=0", nil))
+		w := httptest.NewRecorder()
+		s.router.ServeHTTP(w, req)
+
+		s.Assert().Equal(http.StatusOK, w.Code)
+		snaps.MatchJSON(s.T(), w.Body.String())
+	})
+	s.Run("success (limit and offset)", func() {
+		s.hookUsecase.EXPECT().GetAllHooks(gomock.Any(), 5, 5).Return(models.HookSlice{
+			{
+				HookID:      uuid.MustParse("12345678-1234-5678-1234-567812345678"),
+				DisplayName: "test",
+				URL:         "http://test.com",
+				Method:      "POST",
+				Body:        dummyBody,
+				Headers:     dummyHeaders,
+			},
+		}, 3, nil).Times(1)
+
+		req := lo.Must(http.NewRequest("GET", "/api/v1/hooks?limit=5&offset=5", nil))
+		w := httptest.NewRecorder()
+		s.router.ServeHTTP(w, req)
+
+		s.Assert().Equal(http.StatusOK, w.Code)
+		snaps.MatchJSON(s.T(), w.Body.String())
+	})
+}
