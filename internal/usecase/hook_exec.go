@@ -12,7 +12,7 @@ import (
 )
 
 type HookExecServiceIF interface {
-	GetAllHooks(ctx context.Context, limit, offset int) (models.HookSlice, error)
+	GetAllHooks(ctx context.Context, limit, offset int) (models.HookSlice, int, error)
 	ExecHookInTx(ctx context.Context, tx *sql.Tx, hookID uuid.UUID) (int, error)
 }
 
@@ -39,7 +39,7 @@ func (t *HookExecUsecase) ExecuteScheduledHooks(ctx context.Context) error {
 		default:
 		}
 		// TODO ここで正しくスケジュールに適した処理を取得する
-		hooks, err := t.hookExecSvc.GetAllHooks(ctx, limit, offset)
+		hooks, total, err := t.hookExecSvc.GetAllHooks(ctx, limit, offset)
 		if err != nil {
 			return fmt.Errorf("failed to get hooks: %w", err)
 		}
@@ -48,6 +48,7 @@ func (t *HookExecUsecase) ExecuteScheduledHooks(ctx context.Context) error {
 			logger.Info().Msg("no hooks to execute")
 			return nil
 		}
+		logger.Info().Int("total", total).Int("offset", offset).Int("limit", limit).Msg("exec hooks")
 		// TODO ここでgoroutine並列処理
 		for _, hook := range hooks {
 			err := t.ExecHook(ctx, hook.HookID)

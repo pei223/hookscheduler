@@ -30,6 +30,7 @@ func NewRouter(
 	v1.Use(generateLoggerWithRequestIDContext(logger))
 	{
 		hooksRoute := v1.Group("/hooks")
+		hooksRoute.GET("", web.ToHandlerFunc(hookHandler.GetAllHooks))
 		{
 			hookRoute := hooksRoute.Group("/:hookID")
 			{

@@ -53,12 +53,13 @@ func (mr *MockHookExecServiceIFMockRecorder) ExecHookInTx(arg0, arg1, arg2 inter
 }
 
 // GetAllHooks mocks base method.
-func (m *MockHookExecServiceIF) GetAllHooks(arg0 context.Context, arg1, arg2 int) (models.HookSlice, error) {
+func (m *MockHookExecServiceIF) GetAllHooks(arg0 context.Context, arg1, arg2 int) (models.HookSlice, int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllHooks", arg0, arg1, arg2)
 	ret0, _ := ret[0].(models.HookSlice)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(int)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // GetAllHooks indicates an expected call of GetAllHooks.

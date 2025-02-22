@@ -57,12 +57,12 @@ func (s *hookExecTestSuite) TestExecScheduledHook() {
 				URL:         "http://test2.com",
 				Method:      "POST",
 			},
-		}, nil).Times(1)
+		}, 2, nil).Times(1)
 		s.mockHookExecService.EXPECT().GetAllHooks(
 			gomock.Any(),
 			gomock.Any(),
 			gomock.Any(),
-		).Return(models.HookSlice{}, nil).Times(1)
+		).Return(models.HookSlice{}, 0, nil).Times(1)
 		s.mockHookExecService.EXPECT().ExecHookInTx(
 			gomock.Any(),
 			gomock.Any(),
@@ -91,12 +91,12 @@ func (s *hookExecTestSuite) TestExecScheduledHook() {
 				URL:         "http://test2.com",
 				Method:      "POST",
 			},
-		}, nil).Times(1)
+		}, 1, nil).Times(1)
 		s.mockHookExecService.EXPECT().GetAllHooks(
 			gomock.Any(),
 			gomock.Any(),
 			gomock.Any(),
-		).Return(models.HookSlice{}, nil).Times(1)
+		).Return(models.HookSlice{}, 0, nil).Times(1)
 		s.mockHookExecService.EXPECT().ExecHookInTx(
 			gomock.Any(),
 			gomock.Any(),
@@ -116,7 +116,7 @@ func (s *hookExecTestSuite) TestExecScheduledHook() {
 			gomock.Any(),
 			gomock.Any(),
 			gomock.Any(),
-		).Return(nil, errors.New("testErr")).Times(1)
+		).Return(nil, 0, errors.New("testErr")).Times(1)
 		err := s.hookExecUsecase.ExecuteScheduledHooks(ctx)
 		s.Require().Error(err)
 	})

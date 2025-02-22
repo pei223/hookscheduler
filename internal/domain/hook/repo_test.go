@@ -181,11 +181,12 @@ func (s *hookRepoTestSuite) TestGetAllHooks() {
 
 	s.Run("success(limit/offset)", func() {
 		err := db.ReadOnlyTx(ctx, s.db, func(ctx context.Context, tx *sql.Tx) error {
-			hooks, err := s.repo.GetAllHooks(ctx, tx, 2, 1)
+			hooks, total, err := s.repo.GetAllHooks(ctx, tx, 2, 1)
 			s.NoError(err)
 			s.Len(hooks, 2)
 			s.Equal("hook2", hooks[0].DisplayName)
 			s.Equal("hook3", hooks[1].DisplayName)
+			s.Equal(4, total)
 			return nil
 		}, nil)
 		lo.Must(0, err)

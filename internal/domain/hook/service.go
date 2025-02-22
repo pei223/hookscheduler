@@ -15,7 +15,7 @@ type HookRepo interface {
 	GetHook(ctx context.Context, tx *sql.Tx, hookId uuid.UUID) (*models.Hook, error)
 	DeleteHook(ctx context.Context, tx *sql.Tx, hookId uuid.UUID) error
 	CreateHook(ctx context.Context, tx *sql.Tx, params *HookCreateParams) (*models.Hook, error)
-	GetAllHooks(ctx context.Context, tx *sql.Tx, limit int, offset int) (models.HookSlice, error)
+	GetAllHooks(ctx context.Context, tx *sql.Tx, limit int, offset int) (models.HookSlice, int, error)
 }
 
 type HookService struct {
@@ -86,19 +86,20 @@ func (h *HookService) CreateHookInTx(ctx context.Context, tx *sql.Tx, params *Ho
 	return h.repo.CreateHook(ctx, tx, params)
 }
 
-func (h *HookService) GetAllHooks(ctx context.Context, limit, offset int) (models.HookSlice, error) {
+func (h *HookService) GetAllHooks(ctx context.Context, limit, offset int) (models.HookSlice, int, error) {
 	var hooks models.HookSlice
+	var total int
 	err := db.ReadOnlyTx(
 		ctx,
 		h.db,
 		func(ctx context.Context, tx *sql.Tx) error {
 			var err error
-			hooks, err = h.repo.GetAllHooks(ctx, tx, limit, offset)
+			hooks, total, err = h.repo.GetAllHooks(ctx, tx, limit, offset)
 			return err
 		},
 		nil,
 	)
-	return hooks, err
+	return hooks, total, err
 }
 
 func (h *HookService) ExecHookInTx(ctx context.Context, tx *sql.Tx, hookID uuid.UUID) (int, error) {
