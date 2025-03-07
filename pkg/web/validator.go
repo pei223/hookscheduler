@@ -1,7 +1,10 @@
 package web
 
 import (
+	"strconv"
+
 	"github.com/ettle/strcase"
+	"github.com/gin-gonic/gin"
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -58,4 +61,19 @@ func SchemaValidate(v any) []errorcommon.InvalidParam {
 		return ToInvalidParams(errs.(validator.ValidationErrors))
 	}
 	return nil
+}
+
+func ValidateInt(c *gin.Context, queryName string, defaultVal int) (int, *errorcommon.InvalidParam) {
+	queryValue := c.Query(queryName)
+	if queryValue == "" {
+		return defaultVal, nil
+	}
+	queryIntValue, err := strconv.Atoi(queryValue)
+	if err != nil {
+		return 0, &errorcommon.InvalidParam{
+			Name:   queryName,
+			Reason: "must be a number",
+		}
+	}
+	return queryIntValue, nil
 }
