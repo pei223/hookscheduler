@@ -1,0 +1,132 @@
+
+[TestHookModSuite/TestCreateHookSchedule/contains_empty_field - 1]
+{
+ "instance": "/api/v1/hook-schedules",
+ "invalidParams": [
+  {
+   "name": "scheduleFrequencyUnit",
+   "reason": "ScheduleFrequencyUnit is a required field"
+  },
+  {
+   "name": "scheduleTimeMonth",
+   "reason": "ScheduleTimeMonth must be 1 or greater"
+  },
+  {
+   "name": "scheduleTimeDay",
+   "reason": "ScheduleTimeDay must be 1 or greater"
+  }
+ ],
+ "title": "invalid params",
+ "type": "err_params"
+}
+---
+
+[TestHookModSuite/TestDeleteHookSchedule/not_found - 1]
+{
+ "instance": "/api/v1/hook-schedules/12345678-1234-5678-1234-567812345678",
+ "title": "no data",
+ "type": "err_no_data"
+}
+---
+
+[TestHookModSuite/TestCreateHookSchedule/success - 1]
+{
+ "description": "create test",
+ "displayName": "create test",
+ "hookId": "12345678-1234-5678-1234-567812345678",
+ "hookScheduleId": "12345678-1234-5678-1234-567812345678",
+ "scheduleFrequencyUnit": "every_minute",
+ "scheduleTimeDay": 4,
+ "scheduleTimeHour": 3,
+ "scheduleTimeMinute": 2,
+ "scheduleTimeMonth": 5,
+ "scheduleTimeSecond": 1
+}
+---
+
+[TestHookModSuite/TestCreateHookSchedule/contains_invalid_params - 1]
+{
+ "instance": "/api/v1/hook-schedules",
+ "title": "failed to parse",
+ "type": "err_params"
+}
+---
+
+[TestHookModSuite/TestGetHookSchedule/success - 1]
+{
+ "description": "get test",
+ "displayName": "get test",
+ "hookId": "12345678-1234-5678-1234-567812345678",
+ "hookScheduleId": "12345678-1234-5678-1234-567812345678",
+ "scheduleFrequencyUnit": "every_minute",
+ "scheduleTimeDay": 3,
+ "scheduleTimeHour": 4,
+ "scheduleTimeMinute": 5,
+ "scheduleTimeMonth": 2,
+ "scheduleTimeSecond": 6
+}
+---
+
+[TestHookModSuite/TestGetHookSchedule/not_found - 1]
+{
+ "instance": "/api/v1/hook-schedules/12345678-1234-5678-1234-567812345678",
+ "title": "no data",
+ "type": "err_no_data"
+}
+---
+
+[TestHookModSuite/TestListHookSchedules/success_(no_limit_and_offset) - 1]
+{
+ "items": [
+  {
+   "description": "",
+   "displayName": "list test",
+   "hookId": "12345678-1234-5678-1234-567812345678",
+   "hookScheduleId": "00000000-0000-0000-0000-000000000000",
+   "scheduleFrequencyUnit": "",
+   "scheduleTimeDay": 0,
+   "scheduleTimeHour": 0,
+   "scheduleTimeMinute": 0,
+   "scheduleTimeMonth": 0,
+   "scheduleTimeSecond": 0
+  }
+ ],
+ "limit": 10,
+ "offset": 0,
+ "total": 4
+}
+---
+
+[TestHookModSuite/TestListHookSchedules/success_(limit_and_offset) - 1]
+{
+ "items": [
+  {
+   "description": "",
+   "displayName": "list test",
+   "hookId": "12345678-1234-5678-1234-567812345678",
+   "hookScheduleId": "00000000-0000-0000-0000-000000000000",
+   "scheduleFrequencyUnit": "",
+   "scheduleTimeDay": 0,
+   "scheduleTimeHour": 0,
+   "scheduleTimeMinute": 0,
+   "scheduleTimeMonth": 0,
+   "scheduleTimeSecond": 0
+  },
+  {
+   "description": "",
+   "displayName": "list test2",
+   "hookId": "12345678-1234-5678-1234-567812345678",
+   "hookScheduleId": "00000000-0000-0000-0000-000000000000",
+   "scheduleFrequencyUnit": "",
+   "scheduleTimeDay": 0,
+   "scheduleTimeHour": 0,
+   "scheduleTimeMinute": 0,
+   "scheduleTimeMonth": 0,
+   "scheduleTimeSecond": 0
+  }
+ ],
+ "limit": 10,
+ "offset": 20,
+ "total": 3
+}
+---

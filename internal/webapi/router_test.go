@@ -18,8 +18,9 @@ import (
 
 type routerTestSuite struct {
 	suite.Suite
-	router      *gin.Engine
-	hookUsecase *mock_webapi.MockHookUsecaseIF
+	router              *gin.Engine
+	hookUsecase         *mock_webapi.MockHookUsecaseIF
+	hookScheduleUsecase *mock_webapi.MockHookScheduleUsecaseIF
 }
 
 func (s *routerTestSuite) SetupSuite() {
@@ -27,8 +28,10 @@ func (s *routerTestSuite) SetupSuite() {
 
 	gomock := gomock.NewController(s.T())
 	s.hookUsecase = mock_webapi.NewMockHookUsecaseIF(gomock)
+	s.hookScheduleUsecase = mock_webapi.NewMockHookScheduleUsecaseIF(gomock)
 	s.router = webapi.NewRouter(
 		webapi.NewHookRouter(s.hookUsecase),
+		webapi.NewHookScheduleRouter(s.hookScheduleUsecase),
 		logger.NewLogger(context.TODO(), "debug"),
 	)
 }

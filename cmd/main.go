@@ -13,6 +13,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/lib/pq"
 	"github.com/pei223/hook-scheduler/internal/domain/hook"
+	"github.com/pei223/hook-scheduler/internal/domain/hookschedule"
 	"github.com/pei223/hook-scheduler/internal/usecase"
 	"github.com/pei223/hook-scheduler/internal/webapi"
 	"github.com/pei223/hook-scheduler/internal/worker"
@@ -51,12 +52,18 @@ func Serve() {
 	apiClient := resty.New()
 
 	hookSvc := hook.NewHookService(db, hook.NewHookRepo(), apiClient)
+	hookScheduleSvc := hookschedule.NewHookScheduleService(db, hookschedule.NewHookScheduleRepo())
+
 	hookUsecase := usecase.NewHookUsecase(hookSvc)
 	hookExecUsecase := usecase.NewHookExecUsecase(db, hookSvc)
+	hookScheduleUsecase := usecase.NewHookScheduleUsecase(db, hookScheduleSvc)
+
 	hookRouter := webapi.NewHookRouter(hookUsecase)
+	hookScheduleRouter := webapi.NewHookScheduleRouter(hookScheduleUsecase)
 
 	router := webapi.NewRouter(
 		hookRouter,
+		hookScheduleRouter,
 		logger,
 	)
 

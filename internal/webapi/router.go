@@ -22,6 +22,7 @@ func generateLoggerWithRequestIDContext(logger zerolog.Logger) gin.HandlerFunc {
 
 func NewRouter(
 	hookHandler *HookRouter,
+	hookScheduleHandler *HookScheduleRouter,
 	logger zerolog.Logger,
 ) *gin.Engine {
 	router := gin.New()
@@ -31,6 +32,7 @@ func NewRouter(
 	{
 		hooksRoute := v1.Group("/hooks")
 		hooksRoute.GET("", web.ToHandlerFunc(hookHandler.GetAllHooks))
+		hooksRoute.POST("", web.ToHandlerFunc(hookHandler.CreateHook))
 		{
 			hookRoute := hooksRoute.Group("/:hookID")
 			{
@@ -39,7 +41,16 @@ func NewRouter(
 				hookRoute.DELETE("", web.ToHandlerFunc(hookHandler.DeleteHook))
 			}
 		}
-		hooksRoute.POST("", web.ToHandlerFunc(hookHandler.CreateHook))
+
+		hookSchedulesRoute := v1.Group("/hook-schedules")
+		hookSchedulesRoute.GET("", web.ToHandlerFunc(hookScheduleHandler.ListHookSchedules))
+		hookSchedulesRoute.POST("", web.ToHandlerFunc(hookScheduleHandler.CreateHookSchedule))
+		{
+			hookScheduleRoute := hookSchedulesRoute.Group("/:hookScheduleID")
+			hookScheduleRoute.Use(hookScheduleIDContext)
+			hookScheduleRoute.GET("", web.ToHandlerFunc(hookScheduleHandler.GetHookSchedule))
+			hookScheduleRoute.DELETE("", web.ToHandlerFunc(hookScheduleHandler.DeleteHookSchedule))
+		}
 	}
 
 	return router
