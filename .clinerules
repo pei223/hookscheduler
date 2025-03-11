@@ -1,0 +1,52 @@
+# Cline rules
+## このアプリの概要
+Webhooを自動でスケジュール実行してくれるアプリ。
+スケジュールと実行するWebhookの設定はAPIで登録・削除・更新できる。
+
+バイナリにコンパイルされて、コンテナで実行することを想定している。
+
+## データベース
+データベースはPostgreSQLを使用する。
+
+### テーブル
+initdb.dディレクトリに定義している。
+
+## 設計・ディレクトリ構成
+基本構成は以下に従う。
+https://github.com/golang-standards/project-layout/blob/master/README_ja.md
+
+設計はDDDに近い構成。
+
+```
+cmd(起点) -> webapi,worker(API/worker) -> usecase(ユースケース単位) -> domain/service,repository(ドメイン単位で固有の処理)
+```
+
+
+
+## 技術スタック
+### 言語・フレームワーク
+- Go
+- Gin
+- SQLBoiler
+- gomock
+- タスク管理はTask/Taskfile
+
+### テスト
+gomockを使用してモックを作成する。
+下層のレイヤーはモックしてテストを書く。
+
+最下層のrepositoryは実際にテスト用のDBを稼働させてテストを行う。
+
+公開している関数は全てテストを書く。
+
+
+## 期待する回答
+- 実装コードは省略せず、完全な形で提供
+- まずは型/interface定義を記載
+
+
+## git操作について
+- すべて日本語
+- 対応内容ごとにブランチを切る
+- prefixにgitmojiを使用する
+  - https://gitmoji.dev/
