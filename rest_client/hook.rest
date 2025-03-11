@@ -23,6 +23,9 @@ Content-Type: application/json
 
 @hook_id=YOUR_HOOK_ID
 
+### List
+GET  http://localhost:80/api/v1/hooks
+Content-Type: application/json
 
 ### Get
 GET  http://localhost:80/api/v1/hooks/{{hook_id}}

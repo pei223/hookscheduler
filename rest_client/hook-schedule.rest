@@ -1,0 +1,29 @@
+## hook schedule API
+@hook_id=YOUR_HOOK_ID
+
+### Create
+POST  http://localhost:80/api/v1/hook-schedules
+Content-Type: application/json
+
+{
+    "hookId": "{{hook_id}}",
+    "displayName": "testhook1",
+    "description": "testhook1 description",
+    "scheduleFrequencyUnit": "every_minute",
+    "scheduleTimeMinute": 0,
+    "scheduleTimeSecond": 0,
+    "scheduleTimeHour": 0,
+    "scheduleTimeDay": 1,
+    "scheduleTimeMonth": 1
+}
+
+@hook_schedule_id=YOUR_HOOK_SCHEDULE_ID
+
+### List
+GET  http://localhost:80/api/v1/hook-schedules?limit=10
+Content-Type: application/json
+
+
+### Delete
+DELETE  http://localhost:80/api/v1/hook-schedules/{{hook_schedule_id}}
+Content-Type: application/json
