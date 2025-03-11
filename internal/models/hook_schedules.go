@@ -24,67 +24,67 @@ import (
 
 // HookSchedule is an object representing the database table.
 type HookSchedule struct {
-	HookScheduleID       uuid.UUID `boil:"hook_schedule_id" json:"hook_schedule_id" toml:"hook_schedule_id" yaml:"hook_schedule_id"`
-	HookID               uuid.UUID `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
-	DisplayName          string    `boil:"display_name" json:"display_name" toml:"display_name" yaml:"display_name"`
-	Description          string    `boil:"description" json:"description" toml:"description" yaml:"description"`
-	ScheduleIntervalUnit int16     `boil:"schedule_interval_unit" json:"schedule_interval_unit" toml:"schedule_interval_unit" yaml:"schedule_interval_unit"`
-	ScheduleTimeMonth    int16     `boil:"schedule_time_month" json:"schedule_time_month" toml:"schedule_time_month" yaml:"schedule_time_month"`
-	ScheduleTimeDay      int16     `boil:"schedule_time_day" json:"schedule_time_day" toml:"schedule_time_day" yaml:"schedule_time_day"`
-	ScheduleTimeHour     int16     `boil:"schedule_time_hour" json:"schedule_time_hour" toml:"schedule_time_hour" yaml:"schedule_time_hour"`
-	ScheduleTimeMinute   int16     `boil:"schedule_time_minute" json:"schedule_time_minute" toml:"schedule_time_minute" yaml:"schedule_time_minute"`
-	ScheduleTimeSecond   int16     `boil:"schedule_time_second" json:"schedule_time_second" toml:"schedule_time_second" yaml:"schedule_time_second"`
+	HookScheduleID        uuid.UUID `boil:"hook_schedule_id" json:"hook_schedule_id" toml:"hook_schedule_id" yaml:"hook_schedule_id"`
+	HookID                uuid.UUID `boil:"hook_id" json:"hook_id" toml:"hook_id" yaml:"hook_id"`
+	DisplayName           string    `boil:"display_name" json:"display_name" toml:"display_name" yaml:"display_name"`
+	Description           string    `boil:"description" json:"description" toml:"description" yaml:"description"`
+	ScheduleFrequencyUnit string    `boil:"schedule_frequency_unit" json:"schedule_frequency_unit" toml:"schedule_frequency_unit" yaml:"schedule_frequency_unit"`
+	ScheduleTimeMonth     int16     `boil:"schedule_time_month" json:"schedule_time_month" toml:"schedule_time_month" yaml:"schedule_time_month"`
+	ScheduleTimeDay       int16     `boil:"schedule_time_day" json:"schedule_time_day" toml:"schedule_time_day" yaml:"schedule_time_day"`
+	ScheduleTimeHour      int16     `boil:"schedule_time_hour" json:"schedule_time_hour" toml:"schedule_time_hour" yaml:"schedule_time_hour"`
+	ScheduleTimeMinute    int16     `boil:"schedule_time_minute" json:"schedule_time_minute" toml:"schedule_time_minute" yaml:"schedule_time_minute"`
+	ScheduleTimeSecond    int16     `boil:"schedule_time_second" json:"schedule_time_second" toml:"schedule_time_second" yaml:"schedule_time_second"`
 
 	R *hookScheduleR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L hookScheduleL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var HookScheduleColumns = struct {
-	HookScheduleID       string
-	HookID               string
-	DisplayName          string
-	Description          string
-	ScheduleIntervalUnit string
-	ScheduleTimeMonth    string
-	ScheduleTimeDay      string
-	ScheduleTimeHour     string
-	ScheduleTimeMinute   string
-	ScheduleTimeSecond   string
+	HookScheduleID        string
+	HookID                string
+	DisplayName           string
+	Description           string
+	ScheduleFrequencyUnit string
+	ScheduleTimeMonth     string
+	ScheduleTimeDay       string
+	ScheduleTimeHour      string
+	ScheduleTimeMinute    string
+	ScheduleTimeSecond    string
 }{
-	HookScheduleID:       "hook_schedule_id",
-	HookID:               "hook_id",
-	DisplayName:          "display_name",
-	Description:          "description",
-	ScheduleIntervalUnit: "schedule_interval_unit",
-	ScheduleTimeMonth:    "schedule_time_month",
-	ScheduleTimeDay:      "schedule_time_day",
-	ScheduleTimeHour:     "schedule_time_hour",
-	ScheduleTimeMinute:   "schedule_time_minute",
-	ScheduleTimeSecond:   "schedule_time_second",
+	HookScheduleID:        "hook_schedule_id",
+	HookID:                "hook_id",
+	DisplayName:           "display_name",
+	Description:           "description",
+	ScheduleFrequencyUnit: "schedule_frequency_unit",
+	ScheduleTimeMonth:     "schedule_time_month",
+	ScheduleTimeDay:       "schedule_time_day",
+	ScheduleTimeHour:      "schedule_time_hour",
+	ScheduleTimeMinute:    "schedule_time_minute",
+	ScheduleTimeSecond:    "schedule_time_second",
 }
 
 var HookScheduleTableColumns = struct {
-	HookScheduleID       string
-	HookID               string
-	DisplayName          string
-	Description          string
-	ScheduleIntervalUnit string
-	ScheduleTimeMonth    string
-	ScheduleTimeDay      string
-	ScheduleTimeHour     string
-	ScheduleTimeMinute   string
-	ScheduleTimeSecond   string
+	HookScheduleID        string
+	HookID                string
+	DisplayName           string
+	Description           string
+	ScheduleFrequencyUnit string
+	ScheduleTimeMonth     string
+	ScheduleTimeDay       string
+	ScheduleTimeHour      string
+	ScheduleTimeMinute    string
+	ScheduleTimeSecond    string
 }{
-	HookScheduleID:       "hook_schedules.hook_schedule_id",
-	HookID:               "hook_schedules.hook_id",
-	DisplayName:          "hook_schedules.display_name",
-	Description:          "hook_schedules.description",
-	ScheduleIntervalUnit: "hook_schedules.schedule_interval_unit",
-	ScheduleTimeMonth:    "hook_schedules.schedule_time_month",
-	ScheduleTimeDay:      "hook_schedules.schedule_time_day",
-	ScheduleTimeHour:     "hook_schedules.schedule_time_hour",
-	ScheduleTimeMinute:   "hook_schedules.schedule_time_minute",
-	ScheduleTimeSecond:   "hook_schedules.schedule_time_second",
+	HookScheduleID:        "hook_schedules.hook_schedule_id",
+	HookID:                "hook_schedules.hook_id",
+	DisplayName:           "hook_schedules.display_name",
+	Description:           "hook_schedules.description",
+	ScheduleFrequencyUnit: "hook_schedules.schedule_frequency_unit",
+	ScheduleTimeMonth:     "hook_schedules.schedule_time_month",
+	ScheduleTimeDay:       "hook_schedules.schedule_time_day",
+	ScheduleTimeHour:      "hook_schedules.schedule_time_hour",
+	ScheduleTimeMinute:    "hook_schedules.schedule_time_minute",
+	ScheduleTimeSecond:    "hook_schedules.schedule_time_second",
 }
 
 // Generated where
@@ -121,27 +121,27 @@ func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 }
 
 var HookScheduleWhere = struct {
-	HookScheduleID       whereHelperuuid_UUID
-	HookID               whereHelperuuid_UUID
-	DisplayName          whereHelperstring
-	Description          whereHelperstring
-	ScheduleIntervalUnit whereHelperint16
-	ScheduleTimeMonth    whereHelperint16
-	ScheduleTimeDay      whereHelperint16
-	ScheduleTimeHour     whereHelperint16
-	ScheduleTimeMinute   whereHelperint16
-	ScheduleTimeSecond   whereHelperint16
+	HookScheduleID        whereHelperuuid_UUID
+	HookID                whereHelperuuid_UUID
+	DisplayName           whereHelperstring
+	Description           whereHelperstring
+	ScheduleFrequencyUnit whereHelperstring
+	ScheduleTimeMonth     whereHelperint16
+	ScheduleTimeDay       whereHelperint16
+	ScheduleTimeHour      whereHelperint16
+	ScheduleTimeMinute    whereHelperint16
+	ScheduleTimeSecond    whereHelperint16
 }{
-	HookScheduleID:       whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_schedule_id\""},
-	HookID:               whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_id\""},
-	DisplayName:          whereHelperstring{field: "\"hook_schedules\".\"display_name\""},
-	Description:          whereHelperstring{field: "\"hook_schedules\".\"description\""},
-	ScheduleIntervalUnit: whereHelperint16{field: "\"hook_schedules\".\"schedule_interval_unit\""},
-	ScheduleTimeMonth:    whereHelperint16{field: "\"hook_schedules\".\"schedule_time_month\""},
-	ScheduleTimeDay:      whereHelperint16{field: "\"hook_schedules\".\"schedule_time_day\""},
-	ScheduleTimeHour:     whereHelperint16{field: "\"hook_schedules\".\"schedule_time_hour\""},
-	ScheduleTimeMinute:   whereHelperint16{field: "\"hook_schedules\".\"schedule_time_minute\""},
-	ScheduleTimeSecond:   whereHelperint16{field: "\"hook_schedules\".\"schedule_time_second\""},
+	HookScheduleID:        whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_schedule_id\""},
+	HookID:                whereHelperuuid_UUID{field: "\"hook_schedules\".\"hook_id\""},
+	DisplayName:           whereHelperstring{field: "\"hook_schedules\".\"display_name\""},
+	Description:           whereHelperstring{field: "\"hook_schedules\".\"description\""},
+	ScheduleFrequencyUnit: whereHelperstring{field: "\"hook_schedules\".\"schedule_frequency_unit\""},
+	ScheduleTimeMonth:     whereHelperint16{field: "\"hook_schedules\".\"schedule_time_month\""},
+	ScheduleTimeDay:       whereHelperint16{field: "\"hook_schedules\".\"schedule_time_day\""},
+	ScheduleTimeHour:      whereHelperint16{field: "\"hook_schedules\".\"schedule_time_hour\""},
+	ScheduleTimeMinute:    whereHelperint16{field: "\"hook_schedules\".\"schedule_time_minute\""},
+	ScheduleTimeSecond:    whereHelperint16{field: "\"hook_schedules\".\"schedule_time_second\""},
 }
 
 // HookScheduleRels is where relationship names are stored.
@@ -172,8 +172,8 @@ func (r *hookScheduleR) GetHook() *Hook {
 type hookScheduleL struct{}
 
 var (
-	hookScheduleAllColumns            = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_interval_unit", "schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute", "schedule_time_second"}
-	hookScheduleColumnsWithoutDefault = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_interval_unit", "schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute", "schedule_time_second"}
+	hookScheduleAllColumns            = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_frequency_unit", "schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute", "schedule_time_second"}
+	hookScheduleColumnsWithoutDefault = []string{"hook_schedule_id", "hook_id", "display_name", "description", "schedule_frequency_unit", "schedule_time_month", "schedule_time_day", "schedule_time_hour", "schedule_time_minute", "schedule_time_second"}
 	hookScheduleColumnsWithDefault    = []string{}
 	hookSchedulePrimaryKeyColumns     = []string{"hook_schedule_id"}
 	hookScheduleGeneratedColumns      = []string{}

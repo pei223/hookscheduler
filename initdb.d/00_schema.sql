@@ -8,14 +8,16 @@ create table if not exists hooks (
   , headers jsonb
 );
 
+create type schedule_frequency_unit as enum ('every_minute', 'every_hour', 'every_day', 'every_month', 'every_year');
+
 create table if not exists hook_schedules (
   hook_schedule_id uuid primary key
   , hook_id uuid not null
   , display_name varchar(200) not null
   , description text not null
   -- hook execution frequency
-  -- 1: minutes, 2: hours, 3: day, 5: month, 6: year
-  , schedule_interval_unit smallint not null
+  -- 1: every minutes, 2: every hours, 3: every day, 5: every month, 6: every year
+  , schedule_frequency_unit schedule_frequency_unit not null
   -- hook execution time
   , schedule_time_month smallint not null
   , schedule_time_day smallint not null

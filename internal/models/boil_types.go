@@ -50,3 +50,22 @@ func makeCacheKey(cols boil.Columns, nzDefaults []string) string {
 	strmangle.PutBuffer(buf)
 	return str
 }
+
+// Enum values for ScheduleFrequencyUnit
+const (
+	ScheduleFrequencyUnitEveryMinute string = "every_minute"
+	ScheduleFrequencyUnitEveryHour   string = "every_hour"
+	ScheduleFrequencyUnitEveryDay    string = "every_day"
+	ScheduleFrequencyUnitEveryMonth  string = "every_month"
+	ScheduleFrequencyUnitEveryYear   string = "every_year"
+)
+
+func AllScheduleFrequencyUnit() []string {
+	return []string{
+		ScheduleFrequencyUnitEveryMinute,
+		ScheduleFrequencyUnitEveryHour,
+		ScheduleFrequencyUnitEveryDay,
+		ScheduleFrequencyUnitEveryMonth,
+		ScheduleFrequencyUnitEveryYear,
+	}
+}
