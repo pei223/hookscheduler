@@ -1,0 +1,81 @@
+
+[TestValidation/too_long_displayName - 1]
+[
+ {
+  "name": "displayName",
+  "reason": "DisplayName must be a maximum of 20 characters in length"
+ }
+]
+---
+
+[TestValidation/empty_displayName - 1]
+[
+ {
+  "name": "displayName",
+  "reason": "DisplayName is a required field"
+ }
+]
+---
+
+[TestValidation/invalid_scheduleTimeMonth - 1]
+[
+ {
+  "name": "scheduleTimeMonth",
+  "reason": "ScheduleTimeMonth must be 12 or less"
+ }
+]
+---
+
+[TestValidation/invalid_scheduleTimeDay - 1]
+[
+ {
+  "name": "scheduleTimeDay",
+  "reason": "ScheduleTimeDay must be 31 or less"
+ }
+]
+---
+
+[TestValidation/invalid_scheduleTimeHour - 1]
+[
+ {
+  "name": "scheduleTimeHour",
+  "reason": "ScheduleTimeHour must be 23 or less"
+ }
+]
+---
+
+[TestValidation/invalid_scheduleTimeMinute - 1]
+[
+ {
+  "name": "scheduleTimeMinute",
+  "reason": "ScheduleTimeMinute must be 59 or less"
+ }
+]
+---
+
+[TestValidation/invalid_scheduleTimeSecond - 1]
+[
+ {
+  "name": "scheduleTimeSecond",
+  "reason": "ScheduleTimeSecond must be 59 or less"
+ }
+]
+---
+
+[TestValidation/invalid_scheduleIntervalUnit - 1]
+[
+ {
+  "name": "scheduleFrequencyUnit",
+  "reason": "ScheduleFrequencyUnit must be one of [1 2 3 5 6]"
+ }
+]
+---
+
+[TestValidation/invalid_scheduleFrequencyUnit - 1]
+[
+ {
+  "name": "scheduleFrequencyUnit",
+  "reason": "ScheduleFrequencyUnit must be one of [every_minute every_hour every_day every_month every_year]"
+ }
+]
+---
